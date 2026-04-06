@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Portal - IT Department</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="parent.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">Parent Portal</h1>
+        <div></div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="hero-section">
+    <img class="hero-banner" src="hero-banner.png" alt="IT Department Banner">
+</header>
+
+<section class="hero-text">
+    <h1>Parent Dashboard</h1>
+    <p>Empowering Education Through Technology</p>
+</section>
+
+<!-- Main Content -->
+<main class="container">
+    <!-- Student Profile Section -->
+    <section class="profile-section">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-image">
+                    <img src="sandesh.png" alt="Sandesh Shingankar">
+                </div>
+                <div class="profile-info">
+                    <h2>Sandesh Shingankar</h2>
+                    <p class="class-info">Class: TE IT-A</p>
+                    <div class="contact-info">
+                        <p><strong>Contact:</strong> 8668916936</p>
+                        <p><strong>Email:</strong> sandeshshingankar8@gmail.com</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://linkedin.com" target="_blank" class="social-btn linkedin-btn" title="LinkedIn">
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-btn github-btn" title="GitHub">
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parent Portal Sections -->
+    <section class="portal-sections">
+        <h2 class="section-title">Your Child's Information</h2>
+
+        <!-- Student Details Section -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="student-details">
+                <span class="btn-icon">👤</span>
+                <span class="btn-label">Student Details</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="student-details">
+                <div class="content-wrapper">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Date of Birth:</label>
+                            <p>24/04/2005</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Gender:</label>
+                            <p>Male</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Roll Number:</label>
+                            <p>70</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Enrollment Date:</label>
+                            <p>15th August 2023</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Address:</label>
+                            <p>Pune, Maharashtra, India</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Blood Group:</label>
+                            <p>O+</p>
+                        </div>
+                    </div>
+                    <div class="guardian-info">
+                        <h3>Guardian Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Father's Name:</label>
+                                <p>Ashok Shingankar</p>
+                            </div>
+                            <div class="detail-item">
+                                <label>Mother's Name:</label>
+                                <p>Usha Shingankar</p>
+                            </div>
+                            <div class="detail-item">
+                                <label>Guardian Contact:</label>
+                                <p>8668916936</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Overview Section -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="attendance-overview">
+                <span class="btn-icon">📊</span>
+                <span class="btn-label">Attendance Overview</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="attendance-overview">
+                <div class="content-wrapper">
+                    <div class="attendance-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Total Classes</div>
+                            <div class="stat-value">75</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Present</div>
+                            <div class="stat-value present">72</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Absent</div>
+                            <div class="stat-value absent">3</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Attendance %</div>
+                            <div class="stat-value percentage">96%</div>
+                        </div>
+                    </div>
+                    <div class="attendance-note">
+                        <p><strong>Note:</strong> Your child maintains excellent attendance. Please ensure consistent participation for better academic performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Performance Section -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="academic-performance">
+                <span class="btn-icon">🎓</span>
+                <span class="btn-label">Academic Performance & Results</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="academic-performance">
+                <div class="content-wrapper">
+                    <div class="semester-results">
+                        <h3>Semester Results</h3>
+                        <div class="marks-table">
+                            <div class="marks-header">
+                                <div class="marks-col">Subject</div>
+                                <div class="marks-col">Marks</div>
+                                <div class="marks-col">Grade</div>
+                            </div>
+                            <div class="marks-row">
+                                <div class="marks-col">Computer Networks & Security </div>
+                                <div class="marks-col">88</div>
+                                <div class="marks-col">A</div>
+                            </div>
+                            <div class="marks-row">
+                                <div class="marks-col">Data Science and Big Data Analytics</div>
+                                <div class="marks-col">92</div>
+                                <div class="marks-col">A+</div>
+                            </div>
+                            <div class="marks-row">
+                                <div class="marks-col">Web Application Development </div>
+                                <div class="marks-col">85</div>
+                                <div class="marks-col">A</div>
+                            </div>
+                            <div class="marks-row">
+                                <div class="marks-col">Elective-II </div>
+                                <div class="marks-col">90</div>
+                                <div class="marks-col">A+</div>
+                            </div>
+                            <div class="marks-row">
+                                <div class="marks-col">Internship</div>
+                                <div class="marks-col">87</div>
+                                <div class="marks-col">A</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="academic-summary">
+                        <p><strong>Current SGPA:</strong> 8.84</p>
+                        <p><strong>Performance:</strong> Excellent - Keep up the great work!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notices & Announcements Section -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="notices">
+                <span class="btn-icon">📢</span>
+                <span class="btn-label">Notices & Announcements</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="notices">
+                <div class="content-wrapper">
+                    <div class="notices-list">
+                        <div class="notice-item">
+                            <div class="notice-header">
+                                <h4>Exam Schedule Released</h4>
+                                <span class="notice-date">20th Jan 2026</span>
+                            </div>
+                            <p>The End Semester Examination schedule has been released. Please ensure your child is well-prepared for the exams starting from 22nd January.</p>
+                        </div>
+                        <div class="notice-item">
+                            <div class="notice-header">
+                                <h4>Project Submission Deadline</h4>
+                                <span class="notice-date">18th Jan 2026</span>
+                            </div>
+                            <p>All students must submit their semester projects by 25th January. Late submissions will incur a penalty.</p>
+                        </div>
+                        <div class="notice-item">
+                            <div class="notice-header">
+                                <h4>Internship Drive Schedule</h4>
+                                <span class="notice-date">15th Jan 2025</span>
+                            </div>
+                            <p>Companies will visit the college for internship recruitment on 5th February. Eligible students are requested to register at the placement office.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="documents">
+                <span class="btn-icon">📄</span>
+                <span class="btn-label">Documents</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="documents">
+                <div class="content-wrapper">
+                    <div class="documents-list">
+                        <div class="document-item">
+                            <span class="doc-icon">📋</span>
+                            <div class="doc-info">
+                                <h4>Admit Card - End Semester Exam</h4>
+                                <p>Issued on: 20th January 2025</p>
+                            </div>
+                            <a href="#" class="doc-btn" title="Download Admit Card">Download</a>
+                        </div>
+                        <div class="document-item">
+                            <span class="doc-icon">📊</span>
+                            <div class="doc-info">
+                                <h4>Semester Transcript</h4>
+                                <p>Previous Semester - December 2024</p>
+                            </div>
+                            <a href="#" class="doc-btn" title="Download Transcript">Download</a>
+                        </div>
+                        <div class="document-item">
+                            <span class="doc-icon">🎓</span>
+                            <div class="doc-info">
+                                <h4>Certificate of Participation</h4>
+                                <p>Technical Seminar - January 2025</p>
+                            </div>
+                            <a href="#" class="doc-btn" title="Download Certificate">Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parent Notifications Section -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="notifications">
+                <span class="btn-icon">💬</span>
+                <span class="btn-label">Parent Notifications & Messages</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="notifications">
+                <div class="content-wrapper">
+                    <div class="notifications-list">
+                        <div class="notification-item from-faculty">
+                            <div class="notif-header">
+                                <h4>From: Prof. Nitin Wankhade</h4>
+                                <span class="notif-date">18th Jan 2025</span>
+                            </div>
+                            <p>Your child has shown excellent progress in the Data Structures course. Keep encouraging him to maintain this performance.</p>
+                        </div>
+                        <div class="notification-item from-admin">
+                            <div class="notif-header">
+                                <h4>From: Department Administration</h4>
+                                <span class="notif-date">15th Jan 2025</span>
+                            </div>
+                            <p>Attendance reminder: Please ensure your child maintains 75% minimum attendance to be eligible for end semester exams.</p>
+                        </div>
+                        <div class="notification-item from-faculty">
+                            <div class="notif-header">
+                                <h4>From: Prof. Sonali Dongare</h4>
+                                <span class="notif-date">10th Jan 2025</span>
+                            </div>
+                            <p>Your child's assignment submission for Database Management was exemplary. Encouraging work!</p>
+                        </div>
+                    </div>
+                    <div class="notification-note">
+                        <p>These messages are sent by faculty and administration for your information. Please contact the department if you have any concerns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <h2>Need Help?</h2>
+        <p>If you have any questions about your child's academic progress, please contact:</p>
+        <div class="contact-details">
+            <p><strong>Department Head:</strong> Dr. Saurabh Saoji</p>
+            <p><strong>Email:</strong> sandesh.shingankar@nmiet.edu.in</p>
+            <p><strong>Phone:</strong> +91-8668916936</p>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+
+    <div class="footer-top">
+        © Copyright 2026 |
+        <strong>NMIET Institute</strong> |
+        All Rights Reserved |
+        Project Done By: Sandesh, Kiran, Tejas
+    </div>
+
+    <div class="footer-bottom">
+        <p>Our Team</p>
+
+        <div class="team-social">
+
+            <div class="member">
+                <span>Sandesh Shingankar</span>
+                <a href="https://github.com/sandeshshingankar" title="GitHub" aria-label="Sandesh's GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/sandeshs-shingankar/" title="LinkedIn" aria-label="Sandesh's LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+
+             <div class="member">
+                <span>Kiran Rathod</span>
+                <a href="https://github.com/Kiran-Rathod-R" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/kiranrathod-r/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+
+            <div class="member">
+                <span>Tejas Naiknaware </span>
+                <a href="https://github.com/tejasn369" title="GitHub" aria-label="Tejas GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/tejas-naiknaware/" title="LinkedIn" aria-label="Tejas LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <button class="scroll-top" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
+</footer>
+
+<script src="parent.js"></script>
+<script src="scroll-to-top.js"></script>
+
+</body>
+</html>

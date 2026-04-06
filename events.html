@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Notifications – NMIET GFM</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+*{box-sizing:border-box}body{background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 50%,#ddd6fe 100%);font-family:'Inter',sans-serif;margin:0}
+.page-hero{background:linear-gradient(135deg,#2d0a6e,#7c3aed,#6d28d9);color:#fff;text-align:center;padding:70px 24px 60px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(196,181,253,.2) 0%,transparent 60%)}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;margin:0 0 10px;position:relative}
+.page-hero p{font-size:17px;opacity:.88;margin:0;position:relative}
+.ev-container{max-width:1100px;margin:0 auto;padding:44px 20px}
+.ev-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:28px;background:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.ev-search{flex:1;min-width:200px;padding:10px 14px;border:2px solid #ddd6fe;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;font-family:'Inter',sans-serif}
+.ev-search:focus{border-color:#7c3aed}
+.ev-filter{padding:10px 14px;border:2px solid #ddd6fe;border-radius:10px;font-size:14px;background:#fff;cursor:pointer;font-family:'Inter',sans-serif}
+.ev-login-btn{padding:10px 20px;background:linear-gradient(135deg,#374151,#111827);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .2s;font-family:'Inter',sans-serif}
+.ev-login-btn:hover{opacity:.88}
+.ev-add-btn{padding:10px 20px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .2s;font-family:'Inter',sans-serif;display:none}
+.ev-add-btn:hover{opacity:.88}
+.ev-logged-bar{background:linear-gradient(135deg,#f5f3ff,#fff);border:2px solid #ddd6fe;border-radius:14px;padding:12px 18px;margin-bottom:22px;display:none;align-items:center;justify-content:space-between}
+.ev-logged-bar.show{display:flex}
+.ev-logged-bar span{font-size:14px;font-weight:700;color:#5b21b6;display:flex;align-items:center;gap:8px}
+.ev-logout-btn{padding:8px 16px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+.ev-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);transition:all .25s}
+.ev-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,0,0,.13)}
+.ev-card-header{padding:20px 22px 14px;position:relative}
+.ev-card-header.tech{background:linear-gradient(135deg,#ede9fe,#ddd6fe)}
+.ev-card-header.cultural{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+.ev-card-header.sports{background:linear-gradient(135deg,#d1fae5,#a7f3d0)}
+.ev-card-header.seminar{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.ev-card-header.workshop{background:linear-gradient(135deg,#fef3c7,#fde68a)}
+.ev-type-badge{font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.ev-type-badge.tech{background:#ede9fe;color:#5b21b6}
+.ev-type-badge.cultural{background:#fce7f3;color:#9d174d}
+.ev-type-badge.sports{background:#d1fae5;color:#065f46}
+.ev-type-badge.seminar{background:#dbeafe;color:#1e40af}
+.ev-type-badge.workshop{background:#fef3c7;color:#92400e}
+.ev-emoji{font-size:36px;position:absolute;top:16px;right:20px}
+.ev-card-title{font-size:17px;font-weight:800;color:#111827;margin-bottom:4px;line-height:1.3;font-family:'Syne',sans-serif}
+.ev-card-sub{font-size:13px;color:#6b7280}
+.ev-card-body{padding:16px 22px 12px}
+.ev-desc{font-size:13.5px;color:#374151;line-height:1.6;margin-bottom:12px}
+.ev-info{display:flex;flex-direction:column;gap:6px}
+.ev-info-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#4b5563}
+.ev-info-row i{color:#7c3aed;width:14px;text-align:center}
+.ev-card-footer{padding:14px 22px 18px;border-top:1.5px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between}
+.ev-reg-btn{padding:9px 18px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:'Inter',sans-serif}
+.ev-reg-btn:hover{opacity:.85}
+.ev-seats{font-size:12px;color:#9ca3af}
+.ev-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(4px)}
+.ev-overlay.active{display:flex}
+.ev-modal{background:#fff;border-radius:18px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:ev-in .25s ease}
+@keyframes ev-in{from{transform:translateY(20px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.ev-mhead{padding:18px 22px 14px;border-bottom:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:18px 18px 0 0}
+.ev-mhead h3{margin:0;font-size:17px;font-weight:700;font-family:'Syne',sans-serif}
+.ev-mclose{background:#f3f4f6;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;color:#6b7280}
+.ev-mclose:hover{background:#fee2e2;color:#dc2626}
+.ev-mbody{padding:20px 22px}
+.ev-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.ev-fg label{font-size:13px;font-weight:600;color:#374151}
+.ev-fg input,.ev-fg textarea,.ev-fg select{padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:14px;outline:none;font-family:'Inter',sans-serif}
+.ev-fg input:focus,.ev-fg textarea:focus,.ev-fg select:focus{border-color:#7c3aed}
+.ev-fg textarea{resize:vertical;min-height:80px}
+.ev-mfoot{padding:14px 22px 18px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px}
+.ev-cancel{padding:10px 18px;border:1.5px solid #d1d5db;border-radius:8px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.ev-submit{padding:10px 22px;border:none;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.ev-empty{text-align:center;padding:60px;color:#9ca3af;font-size:16px}
+.ev-err{color:#dc2626;font-size:13px;margin-bottom:8px;min-height:20px}
+.ev-club-badge{display:inline-flex;align-items:center;gap:5px;background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:6px}
+.realtime-dot{width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block;margin-right:6px;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">Events</h1>
+        <div></div>
+    </div>
+</nav>
+<div class="page-hero">
+    <h1>🎉 Event Notifications</h1>
+    <p>Discover and register for upcoming fests, seminars, workshops &amp; competitions</p>
+</div>
+<div class="ev-container">
+    <div id="evLoggedBar" class="ev-logged-bar">
+        <span id="evLoggedName"><span class="realtime-dot"></span>Club Member Logged In</span>
+        <div style="display:flex;gap:8px;">
+            <button class="ev-add-btn" id="evAddBtnInBar" style="display:flex;padding:8px 14px;font-size:12px;" onclick="openModal()"><i class="fas fa-plus"></i> Post Event</button>
+            <button class="ev-logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+    <div class="ev-toolbar">
+        <input class="ev-search" id="evSearch" type="text" placeholder="Search events...">
+        <select class="ev-filter" id="evFilter">
+            <option value="all">All Types</option>
+            <option value="tech">Technical</option>
+            <option value="cultural">Cultural</option>
+            <option value="sports">Sports</option>
+            <option value="seminar">Seminar</option>
+            <option value="workshop">Workshop</option>
+        </select>
+        <button class="ev-login-btn" id="clubLoginBtn" onclick="openLoginModal()"><i class="fas fa-lock"></i> Club Login</button>
+        <button class="ev-add-btn" id="evAddBtn" onclick="openModal()"><i class="fas fa-plus"></i> Post Event</button>
+    </div>
+    <div class="ev-grid" id="evGrid"></div>
+</div>
+
+<!-- Club Login Modal -->
+<div class="ev-overlay" id="loginModal" onclick="if(event.target===this)closeLoginModal()">
+    <div class="ev-modal" style="max-width:420px;">
+        <div class="ev-mhead">
+            <h3><i class="fas fa-lock" style="color:#7c3aed;margin-right:8px;"></i>Club Login</h3>
+            <button class="ev-mclose" onclick="closeLoginModal()">✕</button>
+        </div>
+        <div class="ev-mbody">
+            <div style="text-align:center;margin-bottom:18px;padding:14px;background:#f5f3ff;border-radius:12px;">
+                <i class="fas fa-users" style="font-size:28px;color:#7c3aed;margin-bottom:8px;display:block;"></i>
+                <p style="margin:0;font-size:14px;color:#5b21b6;font-weight:500;">Only club members can post events</p>
+            </div>
+            <div class="ev-fg">
+                <label>Select Club</label>
+                <select id="loginClubSel"></select>
+            </div>
+            <div class="ev-fg">
+                <label>Role</label>
+                <select id="loginRoleSel"></select>
+            </div>
+            <div class="ev-fg"><label>Email</label><input type="email" id="loginEmail" placeholder="your@nmiet.edu.in"></div>
+            <div class="ev-fg"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
+            <div class="ev-err" id="loginErr"></div>
+            <div style="background:#f9fafb;padding:10px 14px;border-radius:8px;font-size:11.5px;color:#6b7280;" id="loginHint">Select a club to see demo credentials.</div>
+        </div>
+        <div class="ev-mfoot">
+            <button class="ev-cancel" onclick="closeLoginModal()">Cancel</button>
+            <button class="ev-submit" onclick="doClubLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="ev-overlay" id="evModal" onclick="if(event.target===this)closeModal()">
+    <div class="ev-modal">
+        <div class="ev-mhead">
+            <h3><i class="fas fa-calendar-plus" style="color:#7c3aed;margin-right:8px;"></i>Post New Event</h3>
+            <button class="ev-mclose" onclick="closeModal()">✕</button>
+        </div>
+        <div class="ev-mbody">
+            <div class="ev-fg"><label>Event Name</label><input id="eName" placeholder="e.g. NMIET Tech Fest 2026"></div>
+            <div class="ev-fg"><label>Type</label>
+                <select id="eType"><option value="tech">Technical</option><option value="cultural">Cultural</option><option value="sports">Sports</option><option value="seminar">Seminar</option><option value="workshop">Workshop</option></select>
+            </div>
+            <div class="ev-fg"><label>Description</label><textarea id="eDesc" placeholder="Brief about the event..."></textarea></div>
+            <div class="ev-fg"><label>Date</label><input type="date" id="eDate"></div>
+            <div class="ev-fg"><label>Time</label><input type="time" id="eTime"></div>
+            <div class="ev-fg"><label>Venue</label><input id="eVenue" placeholder="e.g. Main Auditorium"></div>
+            <div class="ev-fg"><label>Total Seats</label><input type="number" id="eSeats" placeholder="e.g. 200" min="1"></div>
+            <div class="ev-fg"><label>Organiser (auto-filled)</label><input id="eOrg" readonly style="background:#f9fafb;color:#6b7280;"></div>
+        </div>
+        <div class="ev-mfoot">
+            <button class="ev-cancel" onclick="closeModal()">Cancel</button>
+            <button class="ev-submit" onclick="addEvent()">Post Event</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer"><div class="footer-top">© Copyright 2026 | <strong>NMIET Institute</strong> | All Rights Reserved</div></footer>
+<div id="evToast" style="position:fixed;bottom:28px;right:28px;background:#2d0a6e;color:#c4b5fd;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:99999;transform:translateY(20px);opacity:0;transition:all .35s cubic-bezier(.34,1.3,.64,1);max-width:340px;border-left:4px solid #7c3aed;"></div>
+<script src="scroll-to-top.js"></script>
+<script>
+const EV_KEY='gfm_events',REGS_KEY='gfm_event_regs',CL_KEY='gfm_clubs_v2';
+const EMOJIS={tech:'💻',cultural:'🎭',sports:'⚽',seminar:'🎓',workshop:'🔧'};
+const LABELS={tech:'Technical',cultural:'Cultural',sports:'Sports',seminar:'Seminar',workshop:'Workshop'};
+const CLUB_DEFAULTS=[
+  {id:1,name:'IIC',members_list:[{role:'President',email:'arjun.codebits@nmiet.edu.in',pass:'pres123'},{role:'Vice President',email:'priya.codebits@nmiet.edu.in',pass:'vp123'},{role:'Teacher',email:'vivek.nagargoje@nmiet.edu.in',pass:'teach123'}]},
+  {id:2,name:'SAIT',members_list:[{role:'President',email:'sahil.robo@nmiet.edu.in',pass:'pres123'},{role:'Teacher',email:'dheeraj.patil@nmiet.edu.in',pass:'teach123'}]},
+  {id:3,name:'Cultural Ensemble',members_list:[{role:'President',email:'kavya.cultural@nmiet.edu.in',pass:'pres123'},{role:'Teacher',email:'hemlata.mane@nmiet.edu.in',pass:'teach123'}]},
+  {id:4,name:'NSS',members_list:[{role:'President',email:'nikhil.debate@nmiet.edu.in',pass:'pres123'},{role:'Teacher',email:'bharti.dhote@nmiet.edu.in',pass:'teach123'}]},
+  {id:5,name:'ASCS',members_list:[{role:'President',email:'sid.sports@nmiet.edu.in',pass:'pres123'},{role:'Teacher',email:'ajay.sonawane@nmiet.edu.in',pass:'teach123'}]},
+  {id:6,name:'SAAI',members_list:[{role:'President',email:'tanvi.green@nmiet.edu.in',pass:'pres123'},{role:'Teacher',email:'nitin.dhawas@nmiet.edu.in',pass:'teach123'}]},
+  {id:7,name:'Entrepreneurship Cell',members_list:[{role:'President',email:'adi.ecell@nmiet.edu.in',pass:'pres123'},{role:'Teacher',email:'roshni.narkhede@nmiet.edu.in',pass:'teach123'}]},
+];
+const EV_DEFAULTS=[
+  {id:1,name:'NMIET Tech Fest 2026 – InnoVision',type:'tech',desc:'Annual technical festival featuring hackathon, project expo, coding contests, and robotics challenges.',date:'2026-04-18',time:'09:00',venue:'Main Auditorium',org:'Technical Committee',seats:500,registered:312,clubId:1},
+  {id:2,name:'Rhythm & Soul – Cultural Night',type:'cultural',desc:'Annual cultural extravaganza with performances in dance, drama, music, and stand-up comedy.',date:'2026-04-25',time:'18:00',venue:'Open Air Amphitheatre',org:'Cultural Ensemble',seats:800,registered:640,clubId:3},
+  {id:3,name:'Inter-Department Cricket Tournament',type:'sports',desc:'Annual cricket tournament between all departments. Knockout format.',date:'2026-04-20',time:'08:00',venue:'NMIET Cricket Ground',org:'Nexus Sports Club',seats:100,registered:72,clubId:5},
+  {id:4,name:'Seminar: Future of Generative AI',type:'seminar',desc:'Distinguished lecture on the trajectory of large language models and responsible AI deployment.',date:'2026-04-16',time:'11:00',venue:'Seminar Hall A',org:'CodeBits Club',seats:200,registered:187,clubId:1},
+  {id:5,name:'Workshop: Full-Stack Development',type:'workshop',desc:'Hands-on workshop covering React 18, Node.js, REST APIs, and deployment on AWS.',date:'2026-04-22',time:'09:30',venue:'IT Lab 3',org:'CodeBits Club',seats:60,registered:58,clubId:1},
+  {id:6,name:'Debate: AI vs Human Creativity',type:'cultural',desc:'Inter-college debate on "AI will surpass Human Creativity". Register your team of 2.',date:'2026-04-19',time:'10:00',venue:'Conference Room',org:'Debate & Oratory Society',seats:40,registered:28,clubId:4},
+];
+let currentClub=null,currentClubRole=null,isDirector=false;
+function load(){try{return JSON.parse(localStorage.getItem(EV_KEY))||EV_DEFAULTS}catch(e){return EV_DEFAULTS}}
+function loadRegs(){try{return JSON.parse(localStorage.getItem(REGS_KEY))||[]}catch(e){return[]}}
+function save(d){localStorage.setItem(EV_KEY,JSON.stringify(d))}
+function loadClubs(){try{return JSON.parse(localStorage.getItem(CL_KEY))||CLUB_DEFAULTS}catch(e){return CLUB_DEFAULTS}}
+
+function render(){
+  const q=(document.getElementById('evSearch').value||'').toLowerCase();
+  const flt=document.getElementById('evFilter').value;
+  const regs=loadRegs();
+  const items=load().filter(e=>{
+    if(flt!=='all'&&e.type!==flt)return false;
+    return!q||e.name.toLowerCase().includes(q)||e.desc.toLowerCase().includes(q);
+  });
+  const grid=document.getElementById('evGrid');
+  if(!items.length){grid.innerHTML='<div class="ev-empty">🎉 No events found.</div>';return}
+  grid.innerHTML=items.map(e=>{
+    const full=e.registered>=e.seats,reg=regs.includes(e.id);
+    const club=loadClubs().find(c=>c.id===e.clubId);
+    return`<div class="ev-card">
+      <div class="ev-card-header ${e.type}">
+        <span class="ev-type-badge ${e.type}">${LABELS[e.type]}</span>
+        <div class="ev-emoji">${EMOJIS[e.type]||'📅'}</div>
+        <div class="ev-card-title">${e.name}</div>
+        <div class="ev-card-sub">${e.org}${club?`<span class="ev-club-badge"><i class="fas fa-users"></i>${club.name}</span>`:''}</div>
+      </div>
+      <div class="ev-card-body">
+        <div class="ev-desc">${e.desc}</div>
+        <div class="ev-info">
+          <div class="ev-info-row"><i class="fas fa-calendar"></i>${e.date}</div>
+          <div class="ev-info-row"><i class="fas fa-clock"></i>${e.time}</div>
+          <div class="ev-info-row"><i class="fas fa-map-marker-alt"></i>${e.venue}</div>
+          <div class="ev-info-row"><i class="fas fa-users"></i>${e.registered}/${e.seats} registered</div>
+        </div>
+      </div>
+      <div class="ev-card-footer">
+        <span class="ev-seats">${full?'⛔ Full':'🟢 '+(e.seats-e.registered)+' seats left'}</span>
+        ${reg?`<button class="ev-reg-btn" style="background:#10b981;" disabled>✅ Registered</button>`:`<button class="ev-reg-btn" ${full?'disabled style="background:#9ca3af;cursor:not-allowed"':''} onclick="register(${e.id})">${full?'Full':'Register'}</button>`}
+        ${(currentClub&&currentClub.id===e.clubId)||isDirector?`<button onclick="deleteEvent(${e.id})" style="padding:7px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif" title="Delete"><i class="fas fa-trash"></i></button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function register(id){
+  const items=load(),ev=items.find(e=>e.id===id);
+  if(!ev||ev.registered>=ev.seats)return;
+  ev.registered++;save(items);
+  const regs=loadRegs();regs.push(id);localStorage.setItem(REGS_KEY,JSON.stringify(regs));
+  render();alert('✅ You have successfully registered for this event!');
+}
+
+// Club Login
+function initLoginClubs(){
+  const clubs=loadClubs();
+  const sel=document.getElementById('loginClubSel');
+  sel.innerHTML=clubs.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  updateRoles();
+}
+function updateRoles(){
+  const clubId=parseInt(document.getElementById('loginClubSel').value);
+  const clubs=loadClubs();const club=clubs.find(c=>c.id===clubId);
+  const roleSel=document.getElementById('loginRoleSel');
+  const roles=club?[...new Set((club.members_list||[]).map(m=>m.role))]:[];
+  roleSel.innerHTML=roles.map(r=>`<option>${r}</option>`).join('');
+  updateHint();
+}
+function updateHint(){
+  const clubId=parseInt(document.getElementById('loginClubSel').value);
+  const role=document.getElementById('loginRoleSel').value;
+  const clubs=loadClubs();const club=clubs.find(c=>c.id===clubId);
+  const member=(club?.members_list||[]).find(m=>m.role===role);
+  document.getElementById('loginHint').innerHTML=member?`Demo: ${member.email} / ${member.pass}`:'';
+}
+function openLoginModal(){
+  initLoginClubs();document.getElementById('loginErr').textContent='';
+  document.getElementById('loginModal').classList.add('active');
+}
+function closeLoginModal(){document.getElementById('loginModal').classList.remove('active')}
+function doClubLogin(){
+  const clubId=parseInt(document.getElementById('loginClubSel').value);
+  const role=document.getElementById('loginRoleSel').value;
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  const clubs=loadClubs();const club=clubs.find(c=>c.id===clubId);
+  const member=(club?.members_list||[]).find(m=>m.email.toLowerCase()===email&&m.pass===pass&&m.role===role);
+  if(member){
+    currentClub=club;currentClubRole=role;closeLoginModal();
+    document.getElementById('clubLoginBtn').style.display='none';
+    document.getElementById('evAddBtn').style.display='flex';
+    document.getElementById('evLoggedBar').classList.add('show');
+    document.getElementById('evLoggedName').innerHTML=`<span class="realtime-dot"></span>${club.name} — ${role}`;
+    document.getElementById('eOrg').value=club.name;
+  }else{document.getElementById('loginErr').textContent='Invalid credentials or role mismatch.'}
+}
+function doLogout(){
+  currentClub=null;currentClubRole=null;
+  document.getElementById('clubLoginBtn').style.display='flex';
+  document.getElementById('evAddBtn').style.display='none';
+  document.getElementById('evLoggedBar').classList.remove('show');
+}
+function openModal(){
+  if(!currentClub){alert('Please login as a club member first.');return}
+  document.getElementById('eDate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('evModal').classList.add('active');
+}
+function closeModal(){document.getElementById('evModal').classList.remove('active')}
+function addEvent(){
+  if(!currentClub)return;
+  const name=document.getElementById('eName').value.trim();
+  const desc=document.getElementById('eDesc').value.trim();
+  if(!name||!desc){alert('Name and description are required.');return}
+  const items=load();
+  items.unshift({id:Date.now(),name,type:document.getElementById('eType').value,desc,
+    date:document.getElementById('eDate').value,time:document.getElementById('eTime').value||'TBD',
+    venue:document.getElementById('eVenue').value.trim()||'TBD',
+    org:currentClub.name,seats:parseInt(document.getElementById('eSeats').value)||100,
+    registered:0,clubId:currentClub.id});
+  save(items);closeModal();render();
+  localStorage.setItem('gfm_events_ping',Date.now().toString());
+  // Clear form
+  ['eName','eDesc','eVenue','eSeats'].forEach(id=>document.getElementById(id).value='');
+}
+// Realtime
+window.addEventListener('storage',e=>{if([EV_KEY,'gfm_events_ping'].includes(e.key))render()});
+function showToast(msg){const t=document.getElementById('evToast');t.textContent=msg;t.style.transform='translateY(0)';t.style.opacity='1';setTimeout(()=>{t.style.transform='translateY(20px)';t.style.opacity='0'},3000);}
+function deleteEvent(id){
+  if(!confirm('Delete this event?'))return;
+  const items=load().filter(e=>e.id!==id);
+  save(items);render();showToast('🗑️ Event deleted.');
+}
+document.getElementById('evSearch').addEventListener('input',render);
+document.getElementById('evFilter').addEventListener('change',render);
+document.getElementById('loginClubSel')?.addEventListener('change',updateRoles);
+document.getElementById('loginRoleSel')?.addEventListener('change',updateHint);
+document.addEventListener('DOMContentLoaded',()=>{
+  render();initLoginClubs();
+  // Check Director session
+  const sess=JSON.parse(sessionStorage.getItem('userSession')||'{}');
+  if(sess.role==='principal'){
+    isDirector=true;
+    document.getElementById('clubLoginBtn').style.display='none';
+    document.getElementById('evAddBtn').style.display='flex';
+    document.getElementById('evLoggedBar').classList.add('show');
+    document.getElementById('evLoggedName').innerHTML='<span style="background:#fef3c7;color:#92400e;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:800;margin-right:6px;">DIRECTOR</span> Full Access';
+    document.getElementById('eOrg').value='Director Office';
+  }
+  render();
+});
+</script>
+</body>
+</html>

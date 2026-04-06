@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Records - Administration</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="student-records.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="hod.html" class="nav-back">← Back to Administration</a>
+        <h1 class="nav-title">Student Records Management</h1>
+        <div></div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+  <header class="hero-section">
+    <img class="hero-banner" src="hero-banner.png" alt="IT Department Banner">
+</header>
+
+<section class="hero-text">
+    <h1>Student Records Management</h1>
+    <p>Empowering Education Through Technology</p>
+</section>
+
+
+<!-- Main Content -->
+<main class="container">
+    <!-- Student Profile Card -->
+    <section class="profile-section">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="sandesh.png" alt="Student Profile" class="profile-image">
+                <div class="profile-details">
+                    <h2 class="student-name">Sandesh Shingankar</h2>
+                    <div class="profile-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Class:</span>
+                            <span class="info-value">TEITA 70</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Roll Number:</span>
+                            <span class="info-value">70</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Contact:</span>
+                            <span class="info-value">8668916936</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value">sandeshshingankar@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Action Buttons -->
+            <div class="profile-actions">
+                <button class="action-btn edit-btn">Edit Student</button>
+                <button class="action-btn delete-btn">Delete Student</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expandable Sections -->
+    <section class="expandable-sections">
+        <!-- Student Details -->
+        <div class="expandable-item">
+            <button class="expandable-header" aria-expanded="false">
+                <span class="header-content">
+                    <span class="section-icon">👤</span>
+                    <span class="section-title">Student Details</span>
+                </span>
+                <span class="expand-icon">▼</span>
+            </button>
+            <div class="expandable-content">
+                <div class="content-inner">
+                    <div class="detail-item">
+                        <span class="label">Date of Birth:</span>
+                        <span class="value">25/04/2005</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Gender:</span>
+                        <span class="value">Male</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Address:</span>
+                        <span class="value">Pune, Maharashtra</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Guardian Name:</span>
+                        <span class="value">Mr. Ashok Shingankar</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Guardian Contact:</span>
+                        <span class="value">8421090656</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Enrollment Date:</span>
+                        <span class="value">15/08/2022</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Records -->
+        <div class="expandable-item">
+            <button class="expandable-header" aria-expanded="false">
+                <span class="header-content">
+                    <span class="section-icon">📋</span>
+                    <span class="section-title">Attendance Records</span>
+                </span>
+                <span class="expand-icon">▼</span>
+            </button>
+            <div class="expandable-content">
+                <div class="content-inner">
+                    <div class="attendance-summary">
+                        <div class="attendance-stat">
+                            <span class="stat-label">Total Classes:</span>
+                            <span class="stat-value">75</span>
+                        </div>
+                        <div class="attendance-stat">
+                            <span class="stat-label">Present:</span>
+                            <span class="stat-value present">72</span>
+                        </div>
+                        <div class="attendance-stat">
+                            <span class="stat-label">Absent:</span>
+                            <span class="stat-value absent">3</span>
+                        </div>
+                        <div class="attendance-stat">
+                            <span class="stat-label">Percentage:</span>
+                            <span class="stat-value percentage">96%</span>
+                        </div>
+                    </div>
+                    <p class="attendance-note">Last updated: January 28, 2025</p>
+                    <div class="attendance-action">
+                        <button class="mini-btn">Generate Report</button>
+                        <button class="mini-btn">Edit Records</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Performance -->
+        <div class="expandable-item">
+            <button class="expandable-header" aria-expanded="false">
+                <span class="header-content">
+                    <span class="section-icon">🎓</span>
+                    <span class="section-title">Academic Performance</span>
+                </span>
+                <span class="expand-icon">▼</span>
+            </button>
+            <div class="expandable-content">
+                <div class="content-inner">
+                    <div class="academic-item">
+                        <span class="subject">Computer Networks& Security </span>
+                        <span class="marks">92/100</span>
+                    </div>
+                    <div class="academic-item">
+                        <span class="subject">Web Development</span>
+                        <span class="marks">88/100</span>
+                    </div>
+                    <div class="academic-item">
+                        <span class="subject">Data Science and Big Data Analytics</span>
+                        <span class="marks">85/100</span>
+                    </div>
+                    <div class="academic-item">
+                        <span class="subject">Elective-II </span>
+                        <span class="marks">90/100</span>
+                    </div>
+                    <div class="gpa-section">
+                        <span class="label">Current SGPA:</span>
+                        <span class="value gpa">3.8/4.0</span>
+                    </div>
+                    <div class="performance-action">
+                        <button class="mini-btn">Update Marks</button>
+                        <button class="mini-btn">View Transcript</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="expandable-item">
+            <button class="expandable-header" aria-expanded="false">
+                <span class="header-content">
+                    <span class="section-icon">📄</span>
+                    <span class="section-title">Documents</span>
+                </span>
+                <span class="expand-icon">▼</span>
+            </button>
+            <div class="expandable-content">
+                <div class="content-inner">
+                    <div class="document-item">
+                        <span class="doc-name">Admit Card - Semester Exam</span>
+                        <div class="doc-actions">
+                            <a href="#" class="doc-action view">View</a>
+                            <a href="#" class="doc-action delete">Remove</a>
+                        </div>
+                    </div>
+                    <div class="document-item">
+                        <span class="doc-name">Transcript - Semester 5</span>
+                        <div class="doc-actions">
+                            <a href="#" class="doc-action view">View</a>
+                            <a href="#" class="doc-action delete">Remove</a>
+                        </div>
+                    </div>
+                    <div class="document-item">
+                        <span class="doc-name">Bonafide Certificate</span>
+                        <div class="doc-actions">
+                            <a href="#" class="doc-action view">View</a>
+                            <a href="#" class="doc-action delete">Remove</a>
+                        </div>
+                    </div>
+                    <div class="document-item">
+                        <span class="doc-name">Fee Receipt - Current Semester</span>
+                        <div class="doc-actions">
+                            <a href="#" class="doc-action view">View</a>
+                            <a href="#" class="doc-action delete">Remove</a>
+                        </div>
+                    </div>
+                    <div class="document-upload">
+                        <button class="mini-btn">Upload Document</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notices -->
+        <div class="expandable-item">
+            <button class="expandable-header" aria-expanded="false">
+                <span class="header-content">
+                    <span class="section-icon">📢</span>
+                    <span class="section-title">Notices</span>
+                </span>
+                <span class="expand-icon">▼</span>
+            </button>
+            <div class="expandable-content">
+                <div class="content-inner">
+                    <div class="notice-item">
+                        <h4 class="notice-title">Upcoming Exam Schedule</h4>
+                        <p class="notice-date">Posted on: 25/03/2026</p>
+                        <p class="notice-content">Semester exams will be conducted from February 1-15, 2026. All students must report to their respective exam halls 15 minutes before the exam time.</p>
+                        <div class="notice-actions">
+                            <button class="mini-btn">Edit</button>
+                            <button class="mini-btn danger">Delete</button>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <h4 class="notice-title">Assignment Submission Deadline</h4>
+                        <p class="notice-date">Posted on: 20/01/2025</p>
+                        <p class="notice-content">All assignments for the current semester must be submitted by February 10, 2025. Late submissions will not be accepted.</p>
+                        <div class="notice-actions">
+                            <button class="mini-btn">Edit</button>
+                            <button class="mini-btn danger">Delete</button>
+                        </div>
+                    </div>
+                    <div class="notice-upload">
+                        <button class="mini-btn">Post New Notice</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parent Communication -->
+        <div class="expandable-item">
+            <button class="expandable-header" aria-expanded="false">
+                <span class="header-content">
+                    <span class="section-icon">👨‍👩‍👧‍👦</span>
+                    <span class="section-title">Parent Communication</span>
+                </span>
+                <span class="expand-icon">▼</span>
+            </button>
+            <div class="expandable-content">
+                <div class="content-inner">
+                    <div class="communication-section">
+                        <h4 class="comm-title">Notification Preferences</h4>
+                        <div class="comm-item">
+                            <span class="comm-label">📧 Email Notification:</span>
+                            <span class="comm-status">Enabled</span>
+                        </div>
+                        <div class="comm-item">
+                            <span class="comm-label">📱 SMS Notification:</span>
+                            <span class="comm-status">Enabled</span>
+                        </div>
+                        <div class="comm-item">
+                            <span class="comm-label">📞 Phone Call:</span>
+                            <span class="comm-status">Disabled</span>
+                        </div>
+                    </div>
+                    <div class="communication-history">
+                        <h4 class="comm-title">Recent Communications</h4>
+                        <div class="comm-log">
+                            <div class="log-entry">
+                                <span class="log-date">28/01/2025</span>
+                                <span class="log-message">Attendance alert sent for low attendance</span>
+                            </div>
+                            <div class="log-entry">
+                                <span class="log-date">25/01/2025</span>
+                                <span class="log-message">Exam schedule notification sent</span>
+                            </div>
+                            <div class="log-entry">
+                                <span class="log-date">20/01/2025</span>
+                                <span class="log-message">Performance report sent to parents</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="communication-action">
+                        <button class="mini-btn">Send Message to Parents</button>
+                        <button class="mini-btn">View Communication Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add New Student Section -->
+    <section class="add-student-section">
+        <button class="add-student-btn">
+            <span class="btn-icon">➕</span>
+            <span class="btn-text">Add New Student</span>
+        </button>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+
+    <div class="footer-top">
+        © Copyright 2026 |
+        <strong>NMIET Institute</strong> |
+        All Rights Reserved |
+        Project Done By: Sandesh, Kiran, Tejas
+    </div>
+
+    <div class="footer-bottom">
+        <p>Our Team</p>
+
+        <div class="team-social">
+
+            <div class="member">
+                <span>Sandesh Shingankar</span>
+                <a href="https://github.com/sandeshshingankar" title="GitHub" aria-label="Sandesh's GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/sandeshs-shingankar/" title="LinkedIn" aria-label="Sandesh's LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+
+             <div class="member">
+                <span>Kiran Rathod</span>
+                <a href="https://github.com/Kiran-Rathod-R" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/kiranrathod-r/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+
+            <div class="member">
+                <span>Tejas Naiknaware </span>
+                <a href="https://github.com/tejasn369" title="GitHub" aria-label="Tejas GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/tejas-naiknaware/" title="LinkedIn" aria-label="Tejas LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <button class="scroll-top" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
+</footer>
+
+<script src="student-records.js"></script>
+<script src="scroll-to-top.js"></script>
+</body>
+</html>

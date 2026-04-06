@@ -1,0 +1,232 @@
+/* ==================== GFM PAGE SPECIFIC STYLES ==================== */
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    background-color: #c4d7e0;
+}
+
+.hero-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.hero-text {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero-text h1 {
+    margin: 0;
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+.hero-text p {
+    margin: 0;
+    font-size: 18px;
+    opacity: 0.95;
+}
+
+/* Main Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-3xl) var(--spacing-lg);
+}
+
+/* Faculty Showcase Section */
+.faculty-showcase {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3xl);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.elementor-widget-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2xl);
+}
+
+.elementor-image-box-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+.elementor-image-box-img {
+    margin: 0;
+    margin-bottom: var(--spacing-xl);
+}
+
+.elementor-image-box-img img {
+    width: 300px;
+    height: 300px;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    border: 4px solid var(--primary);
+    transition: transform var(--transition-base);
+    box-shadow: var(--shadow-lg);
+}
+
+.elementor-image-box-img img:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-xl);
+}
+
+.elementor-image-box-content {
+    width: 100%;
+    text-align: center;
+}
+
+.elementor-image-box-title {
+    font-size: 32px;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+}
+
+.elementor-image-box-description {
+    color: var(--text-light);
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.elementor-image-box-description b {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.elementor-image-box-description br {
+    content: '';
+    display: block;
+    height: var(--spacing-md);
+}
+
+/* Faculty Grid */
+.faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-3xl);
+}
+
+.faculty-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    border-left: 4px solid var(--primary);
+}
+
+.faculty-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.faculty-card-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.faculty-card-content {
+    padding: var(--spacing-xl);
+}
+
+.faculty-card-name {
+    font-size: 20px;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+.faculty-card-designation {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.faculty-card-info {
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-text h1 {
+        font-size: 32px;
+    }
+
+    .hero-text p {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: var(--spacing-2xl) var(--spacing-md);
+    }
+
+    .faculty-showcase {
+        padding: var(--spacing-2xl);
+    }
+
+    .elementor-image-box-img img {
+        width: 250px;
+        height: 250px;
+    }
+
+    .elementor-image-box-title {
+        font-size: 24px;
+    }
+
+    .faculty-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 24px;
+    }
+
+    .hero-text p {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .faculty-showcase {
+        padding: var(--spacing-xl);
+    }
+
+    .elementor-image-box-img img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .elementor-image-box-title {
+        font-size: 20px;
+    }
+
+    .elementor-image-box-description {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Director Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back</a>
+        <h1 class="nav-title">Director Login</h1>
+        <div></div>
+    </div>
+</nav>
+
+<div style="display:flex; justify-content:center; align-items:center; height:80vh;">
+    
+    <form onsubmit="return loginPrincipal()" 
+          style="background:white; padding:40px; border-radius:10px; width:320px; box-shadow:0 5px 20px rgba(0,0,0,0.1);">
+
+        <h2 style="text-align:center;">Login</h2>
+
+        <input type="text" id="username" placeholder="Username" required 
+               style="width:100%; padding:10px; margin:10px 0;">
+
+        <input type="password" id="password" placeholder="Password" required 
+               style="width:100%; padding:10px; margin:10px 0;">
+
+        <button type="submit" 
+                style="width:100%; padding:10px; background:#0666cc; color:white; border:none;">
+            Login
+        </button>
+
+        <p id="errorMsg" style="color:red; text-align:center;"></p>
+
+    </form>
+
+</div>
+
+<script>
+function loginPrincipal() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if(user === "principal" && pass === "1234") {
+        window.location.href = "Director.html";
+        return false;
+    } else {
+        document.getElementById("errorMsg").innerText = "Invalid Credentials!";
+        return false;
+    }
+}
+</script>
+
+</body>
+</html>

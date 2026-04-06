@@ -1,0 +1,568 @@
+/* ==================== HOME PAGE STYLES ==================== */
+
+/* ================= HERO SECTION ================= */
+.hero-section {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    overflow: hidden;
+}
+
+.hero-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 400px;
+    animation: fadeInDown 0.8s ease;
+}
+
+.hero-text {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 60px var(--spacing-lg);
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-text h1 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero-text p {
+    margin: 0;
+    font-size: 18px;
+    opacity: 0.95;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: 0.5px;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-3xl) var(--spacing-lg);
+}
+
+/* ================= DEPARTMENT SECTION ================= */
+.department-section {
+    margin-bottom: var(--spacing-3xl);
+    animation: fadeInUp 0.8s ease;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.section-header h2 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    display: inline-block;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: var(--radius-full);
+}
+
+.section-header p {
+    font-size: 18px;
+    color: var(--text-secondary);
+}
+
+.department-dropdown {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 14px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230666CC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 24px;
+    padding-right: 40px;
+}
+
+.department-dropdown:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.department-dropdown:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(6, 102, 204, 0.1);
+}
+
+.department-dropdown.selected {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ================= ROLE SELECTION ================= */
+.role-section {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.role-section .section-header {
+    margin-bottom: var(--spacing-3xl);
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--spacing-2xl);
+    margin-top: var(--spacing-2xl);
+}
+
+.cards-grid.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.cards-grid.active {
+    animation: fadeInUp 0.8s ease;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.role-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-2xl);
+    text-align: center;
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-base);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.role-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(6, 102, 204, 0.1), transparent);
+    transition: left var(--transition-base);
+}
+
+.role-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-8px);
+}
+
+.role-card:hover::before {
+    left: 100%;
+}
+
+.role-card.admin-card {
+    border-top: 4px solid #8B5CF6;
+}
+
+.role-card.admin-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.2);
+}
+
+.role-card.faculty-card {
+    border-top: 4px solid #EC4899;
+}
+
+.role-card.faculty-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.2);
+}
+
+.role-card.student-card {
+    border-top: 4px solid #06B6D4;
+}
+
+.role-card.student-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(6, 182, 212, 0.2);
+}
+
+.role-card.parent-card {
+    border-top: 4px solid #14B8A6;
+}
+
+.role-card.parent-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(20, 184, 166, 0.2);
+}
+
+.card-icon {
+    font-size: 56px;
+    line-height: 1;
+    transition: transform var(--transition-base);
+}
+
+.role-card:hover .card-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.role-card h3 {
+    font-size: 24px;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.role-card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.card-btn {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+    font-size: 14px;
+    width: 100%;
+    margin-top: var(--spacing-md);
+}
+
+.card-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ================= FEATURES SECTION ================= */
+.features-section {
+    padding: var(--spacing-3xl) 0;
+    animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.features-section h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+    color: var(--text-primary);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-2xl);
+}
+
+.feature-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+}
+
+.feature-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    font-size: 48px;
+    line-height: 1;
+    margin-bottom: var(--spacing-lg);
+    display: block;
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.feature-card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+/* ================= ABOUT SECTION ================= */
+.about-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-3xl) var(--spacing-2xl);
+    text-align: center;
+    animation: fadeInUp 0.8s ease 0.6s both;
+    box-shadow: var(--shadow-xl);
+}
+
+.about-content h2 {
+    color: white;
+    margin-bottom: var(--spacing-lg);
+    font-size: 36px;
+}
+
+.about-content p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .hero-text {
+        padding: 40px var(--spacing-md);
+    }
+
+    .hero-text h1 {
+        font-size: 36px;
+    }
+
+    .hero-text p {
+        font-size: 16px;
+    }
+
+    .main-container {
+        padding: var(--spacing-2xl) var(--spacing-md);
+    }
+
+    .section-header h2 {
+        font-size: 28px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+
+    .role-card {
+        padding: var(--spacing-xl);
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-section {
+        padding: var(--spacing-2xl) var(--spacing-lg);
+    }
+
+    .about-content h2 {
+        font-size: 28px;
+    }
+
+    .about-content p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 28px;
+    }
+
+    .hero-text p {
+        font-size: 14px;
+    }
+
+    .main-container {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .section-header h2 {
+        font-size: 24px;
+    }
+
+    .role-card {
+        padding: var(--spacing-lg);
+    }
+
+    .card-icon {
+        font-size: 40px;
+    }
+
+    .role-card h3 {
+        font-size: 20px;
+    }
+
+    .feature-card {
+        padding: var(--spacing-xl);
+    }
+}
+/* ================= PRINCIPAL SECTION ================= */
+
+.principal-section {
+    margin-bottom: var(--spacing-3xl);
+    animation: fadeInUp 0.8s ease;
+}
+
+.principal-card-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-2xl);
+}
+
+.role-card.principal-card {
+    max-width: 320px;
+    border-top: 4px solid #F59E0B;
+}
+
+.role-card.principal-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.25);
+}
+
+/* Principal Photo */
+.card-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+}
+
+/* ==================== ENHANCED FEATURES GRID ==================== */
+.enhanced-features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.feature-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.enhanced-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 28px;
+    border-radius: 18px;
+    background: #fff;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--card-color, #0666cc);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.feature-card-link:hover .enhanced-card {
+    transform: translateY(-8px);
+    border-color: var(--card-color, #0666cc);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.13);
+}
+
+.feature-card-link:hover .enhanced-card::after {
+    transform: scaleX(1);
+}
+
+.feature-icon-wrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.enhanced-card .feature-icon {
+    font-size: 28px;
+    background: none;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    margin: 0;
+}
+
+.enhanced-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.enhanced-card p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.6;
+    flex: 1;
+    margin-bottom: 16px;
+}
+
+.feature-cta {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--card-color, #0666cc);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s ease;
+}
+
+.feature-card-link:hover .feature-cta {
+    gap: 8px;
+}
+
+/* ==================== PRINCIPAL SECTION FLEX ==================== */
+.principal-card-wrapper {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.principal-card-wrapper .card-link {
+    flex: 0 0 auto;
+}
+
+.clubs-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.2) !important;
+    border-color: #f59e0b !important;
+}

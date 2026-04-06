@@ -1,0 +1,171 @@
+/* ==================== NAVBAR COMPONENT ==================== */
+
+/* Navigation Bar */
+.navbar {
+    background: var(--white);
+    box-shadow: 0 1px 8px rgba(6, 102, 204, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(6, 102, 204, 0.08);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Section */
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 18px;
+}
+
+.nav-logo img {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    object-fit: contain;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: var(--spacing-xl);
+    align-items: center;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    position: relative;
+    transition: color var(--transition-base);
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    transition: width var(--transition-base);
+    border-radius: 2px;
+}
+
+.nav-menu a:hover::after {
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 217, 255, 0.3);
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+}
+
+/* Back Navigation Button */
+.nav-back {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-base);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
+}
+
+.nav-back:hover {
+    color: var(--primary-light);
+    border-bottom-color: var(--primary-light);
+    transform: translateX(-3px);
+}
+
+.nav-back:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Nav Title */
+.nav-title {
+    font-size: 24px;
+    color: var(--primary);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Mobile Menu Toggle (for future enhancement) */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.nav-toggle:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: var(--spacing-lg);
+    }
+
+    .nav-menu {
+        gap: var(--spacing-lg);
+    }
+
+    .nav-menu a {
+        font-size: 14px;
+    }
+
+    .nav-title {
+        font-size: 18px;
+        flex: 1;
+        text-align: center;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 12px 15px;
+    }
+
+    .nav-logo {
+        gap: var(--spacing-sm);
+        font-size: 14px;
+    }
+
+    .nav-logo img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .nav-menu {
+        gap: var(--spacing-md);
+        font-size: 12px;
+    }
+
+    .nav-title {
+        font-size: 16px;
+    }
+}

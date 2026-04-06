@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Dashboard – NMIET GFM</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+*{box-sizing:border-box}
+body{background:#f9f7f2;font-family:'Inter',sans-serif;margin:0}
+
+/* Hero */
+.cd-hero{background:linear-gradient(135deg,#1a0a00 0%,#4a1c00 40%,#d97706 100%);color:#fff;padding:50px 24px 36px;position:relative;overflow:hidden}
+.cd-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(251,191,36,.18) 0%,transparent 65%)}
+.cd-hero-inner{max-width:1100px;margin:0 auto;position:relative;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.cd-logo-big{width:90px;height:90px;border-radius:50%;border:3px solid #fde68a;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fffbeb;font-size:42px;flex-shrink:0;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.cd-logo-big img{width:100%;height:100%;object-fit:cover}
+.cd-hero-text h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:800;margin:0 0 6px}
+.cd-hero-text p{margin:0;font-size:15px;opacity:.85}
+.cd-role-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;display:inline-block;margin-top:8px}
+.cd-hero-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.cd-action-btn{padding:10px 18px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
+.cd-action-btn.primary{background:#fbbf24;color:#1a0a00}
+.cd-action-btn.primary:hover{background:#f59e0b}
+.cd-action-btn.danger{background:rgba(239,68,68,.2);color:#fecaca;border:1px solid rgba(239,68,68,.3)}
+.cd-action-btn.danger:hover{background:rgba(239,68,68,.35)}
+
+/* Container */
+.cd-container{max-width:1100px;margin:0 auto;padding:36px 20px}
+
+/* Tabs */
+.cd-tabs{display:flex;gap:4px;background:#fff;border-radius:14px;padding:6px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:28px;flex-wrap:wrap}
+.cd-tab{padding:10px 20px;border:none;background:transparent;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:#6b7280;transition:all .2s;display:flex;align-items:center;gap:6px}
+.cd-tab.active{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;box-shadow:0 3px 10px rgba(217,119,6,.3)}
+.cd-tab:hover:not(.active){background:#f9fafb;color:#374151}
+
+/* Tab panels */
+.cd-panel{display:none}
+.cd-panel.active{display:block}
+
+/* Cards */
+.cd-section-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#111827;margin:0 0 16px;display:flex;align-items:center;gap:8px}
+
+/* Overview grid */
+.cd-overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.cd-stat-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid #f3f4f6}
+.cd-stat-card .stat-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#111827}
+.cd-stat-card .stat-label{font-size:13px;color:#6b7280;margin-top:4px}
+.cd-stat-card .stat-icon{font-size:24px;margin-bottom:8px}
+
+/* Info card */
+.cd-info-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:24px}
+.cd-info-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f3f4f6}
+.cd-info-row:last-child{border-bottom:none}
+.cd-info-row i{color:#d97706;width:18px;text-align:center;margin-top:2px}
+.cd-info-row .label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;min-width:90px}
+.cd-info-row .value{font-size:14px;color:#374151;flex:1}
+
+/* Editable field */
+.cd-editable{border:1.5px solid transparent;border-radius:8px;padding:6px 10px;font-family:'Inter',sans-serif;font-size:14px;color:#374151;background:transparent;width:100%;transition:all .2s}
+.cd-editable:focus{border-color:#d97706;background:#fffbeb;outline:none}
+.cd-edit-bar{display:none;gap:8px;margin-top:12px}
+.cd-edit-bar.show{display:flex}
+.cd-save-btn{padding:8px 18px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.cd-discard-btn{padding:8px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* Members table */
+.cd-members-table{width:100%;border-collapse:collapse;font-size:14px}
+.cd-members-table th{text-align:left;padding:10px 14px;background:#f9fafb;color:#374151;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #f3f4f6}
+.cd-members-table td{padding:12px 14px;border-bottom:1px solid #f3f4f6;color:#374151}
+.cd-members-table tr:last-child td{border-bottom:none}
+.cd-members-table tr:hover td{background:#fffbeb}
+.cd-role-chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.cd-role-chip.President{background:#fef3c7;color:#92400e}
+.cd-role-chip.Vice{background:#dbeafe;color:#1e40af}
+.cd-role-chip.Teacher{background:#d1fae5;color:#065f46}
+.cd-role-chip.Secretary{background:#ede9fe;color:#5b21b6}
+.cd-role-chip.Member{background:#f3f4f6;color:#374151}
+
+/* Recruitment section */
+.cd-recruit-cards{display:flex;flex-direction:column;gap:12px}
+.cd-recruit-item{background:#fff;border-radius:12px;padding:18px 20px;border-left:4px solid #10b981;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.cd-recruit-item.expired{border-left-color:#d1d5db;opacity:.7}
+.cd-recruit-title{font-size:15px;font-weight:700;color:#111827;margin-bottom:4px}
+.cd-recruit-meta{font-size:12px;color:#6b7280}
+.cd-expire-btn{padding:6px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.cd-expire-btn:hover{background:#fecaca}
+.cd-delete-btn-sm{padding:6px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:4px}
+
+/* Post recruit modal */
+.cd-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(4px)}
+.cd-overlay.active{display:flex}
+.cd-modal{background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:cd-in .25s ease}
+@keyframes cd-in{from{transform:translateY(20px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.cd-mhead{padding:18px 22px 14px;border-bottom:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0}
+.cd-mhead h3{margin:0;font-size:17px;font-weight:700;font-family:'Syne',sans-serif}
+.cd-mclose{background:#f3f4f6;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;color:#6b7280}
+.cd-mclose:hover{background:#fee2e2;color:#dc2626}
+.cd-mbody{padding:20px 22px}
+.cd-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.cd-fg label{font-size:13px;font-weight:600;color:#374151}
+.cd-fg input,.cd-fg textarea,.cd-fg select{padding:10px 12px;border:1.5px solid #d1d5db;border-radius:9px;font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.cd-fg input:focus,.cd-fg textarea:focus,.cd-fg select:focus{border-color:#d97706}
+.cd-fg textarea{resize:vertical;min-height:85px}
+.cd-mfoot{padding:14px 22px 18px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px}
+.cd-cancel{padding:10px 18px;border:1.5px solid #d1d5db;border-radius:9px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.cd-submit{padding:10px 22px;border:none;border-radius:9px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* Logo upload */
+.cd-logo-wrap{position:relative;width:90px;height:90px;cursor:pointer}
+.cd-logo-overlay-hover{display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:50%;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-size:10px;font-weight:700;text-align:center;gap:3px}
+.cd-logo-overlay-hover i{font-size:16px}
+.cd-logo-wrap:hover .cd-logo-overlay-hover{display:flex}
+
+/* Toast */
+.cd-toast{position:fixed;bottom:28px;right:28px;background:#1a0a00;color:#fbbf24;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:99999;transform:translateY(20px);opacity:0;transition:all .35s cubic-bezier(.34,1.3,.64,1);max-width:340px;border-left:4px solid #d97706}
+.cd-toast.show{transform:translateY(0);opacity:1}
+
+/* Events panel */
+.cd-events-list{display:flex;flex-direction:column;gap:12px}
+.cd-event-item{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.06);border-left:4px solid #8b5cf6;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.cd-event-title{font-size:15px;font-weight:700;color:#111827;margin-bottom:4px}
+.cd-event-meta{font-size:12px;color:#6b7280}
+
+/* Add member modal */
+.cd-add-member-btn{padding:9px 16px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.cd-del-member{padding:5px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.cd-del-member:hover{background:#fecaca}
+
+/* Permission notice */
+.cd-permission-note{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px dashed #fde68a;border-radius:12px;padding:14px 18px;font-size:13px;color:#92400e;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="college-clubs.html" class="nav-back">← Back to Clubs</a>
+        <h1 class="nav-title" id="navClubName">Club Dashboard</h1>
+        <div></div>
+    </div>
+</nav>
+
+<div class="cd-hero" id="cdHero">
+    <div class="cd-hero-inner">
+        <div class="cd-logo-wrap" id="cdLogoWrap">
+            <div class="cd-logo-big" id="cdLogoEl">🏅</div>
+            <div class="cd-logo-overlay-hover"><i class="fas fa-camera"></i>Change</div>
+        </div>
+        <input type="file" accept="image/*" id="logoFileInput" style="display:none" onchange="handleLogoChange(event)">
+        <div class="cd-hero-text">
+            <h1 id="cdClubName">Loading...</h1>
+            <p id="cdClubDesc">—</p>
+            <span class="cd-role-badge" id="cdRoleBadge">Member</span>
+        </div>
+        <div class="cd-hero-actions">
+            <button class="cd-action-btn primary" onclick="openRecruitModal()"><i class="fas fa-bullhorn"></i> Post Recruitment</button>
+            <button class="cd-action-btn danger" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+</div>
+
+<div class="cd-container">
+    <!-- Tabs -->
+    <div class="cd-tabs">
+        <button class="cd-tab active" onclick="switchTab('overview')"><i class="fas fa-home"></i> Overview</button>
+        <button class="cd-tab" onclick="switchTab('members')"><i class="fas fa-users"></i> Members</button>
+        <button class="cd-tab" onclick="switchTab('recruitment')"><i class="fas fa-bullhorn"></i> Recruitment</button>
+        <button class="cd-tab" onclick="switchTab('events')"><i class="fas fa-calendar-alt"></i> Events</button>
+        <button class="cd-tab" onclick="switchTab('edit')"><i class="fas fa-edit"></i> Edit Info</button>
+    </div>
+
+    <!-- Overview Panel -->
+    <div class="cd-panel active" id="panel-overview">
+        <div class="cd-overview-grid" id="cdStatsGrid">
+            <div class="cd-stat-card"><div class="stat-icon">👥</div><div class="stat-num" id="statMembers">—</div><div class="stat-label">Total Members</div></div>
+            <div class="cd-stat-card"><div class="stat-icon">📢</div><div class="stat-num" id="statRecruits">—</div><div class="stat-label">Active Recruitments</div></div>
+            <div class="cd-stat-card"><div class="stat-icon">🎉</div><div class="stat-num" id="statEvents">—</div><div class="stat-label">Events Posted</div></div>
+            <div class="cd-stat-card"><div class="stat-icon">📅</div><div class="stat-num" id="statSchedule">—</div><div class="stat-label">Meeting Schedule</div></div>
+        </div>
+        <div class="cd-info-card">
+            <div class="cd-section-title"><i class="fas fa-info-circle" style="color:#d97706"></i> Club Information</div>
+            <div class="cd-info-row"><i class="fas fa-user-tie"></i><span class="label">Coordinator</span><span class="value" id="infoCoord">—</span></div>
+            <div class="cd-info-row"><i class="fas fa-clock"></i><span class="label">Schedule</span><span class="value" id="infoSchedule">—</span></div>
+            <div class="cd-info-row"><i class="fas fa-tag"></i><span class="label">Category</span><span class="value" id="infoCat">—</span></div>
+            <div class="cd-info-row"><i class="fas fa-align-left"></i><span class="label">Description</span><span class="value" id="infoDesc">—</span></div>
+        </div>
+    </div>
+
+    <!-- Members Panel -->
+    <div class="cd-panel" id="panel-members">
+        <div class="cd-info-card">
+            <div class="cd-section-title" style="justify-content:space-between">
+                <span><i class="fas fa-users" style="color:#d97706"></i> Club Members</span>
+                <button class="cd-add-member-btn" onclick="openAddMemberModal()"><i class="fas fa-plus"></i> Add Member</button>
+            </div>
+            <div style="overflow-x:auto">
+                <table class="cd-members-table" id="membersTable">
+                    <thead><tr><th>Name</th><th>Role</th><th>Email</th><th id="actionsHeader">Actions</th></tr></thead>
+                    <tbody id="membersTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recruitment Panel -->
+    <div class="cd-panel" id="panel-recruitment">
+        <div class="cd-info-card">
+            <div class="cd-section-title" style="justify-content:space-between">
+                <span><i class="fas fa-bullhorn" style="color:#10b981"></i> Recruitment Notices</span>
+                <button class="cd-action-btn primary" onclick="openRecruitModal()" style="padding:8px 14px;font-size:12px"><i class="fas fa-plus"></i> New Notice</button>
+            </div>
+            <div class="cd-recruit-cards" id="recruitCards"></div>
+        </div>
+    </div>
+
+    <!-- Events Panel -->
+    <div class="cd-panel" id="panel-events">
+        <div class="cd-info-card">
+            <div class="cd-section-title" style="justify-content:space-between">
+                <span><i class="fas fa-calendar-alt" style="color:#8b5cf6"></i> Club Events</span>
+                <button class="cd-action-btn primary" onclick="openEventModal()" style="padding:8px 14px;font-size:12px"><i class="fas fa-plus"></i> Post Event</button>
+            </div>
+            <div class="cd-events-list" id="eventsList"></div>
+        </div>
+    </div>
+
+    <!-- Edit Info Panel -->
+    <div class="cd-panel" id="panel-edit">
+        <div class="cd-info-card">
+            <div class="cd-section-title"><i class="fas fa-edit" style="color:#d97706"></i> Edit Club Information</div>
+            <div id="editPermNote" class="cd-permission-note" style="display:none"><i class="fas fa-lock"></i> Only Presidents and Teachers can edit club information.</div>
+            <div class="cd-fg"><label>Club Name</label><input id="editClubName" placeholder="Club name"></div>
+            <div class="cd-fg"><label>Description</label><textarea id="editClubDesc" placeholder="Description"></textarea></div>
+            <div class="cd-fg"><label>Coordinator</label><input id="editClubCoord" placeholder="Faculty coordinator name"></div>
+            <div class="cd-fg"><label>Meeting Schedule</label><input id="editClubSchedule" placeholder="e.g. Every Friday 4PM"></div>
+            <div class="cd-fg"><label>Category</label>
+                <select id="editClubCat">
+                    <option value="tech">Technical</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="sports">Sports</option>
+                    <option value="social">Social</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px">
+                <button class="cd-submit" onclick="saveClubInfo()"><i class="fas fa-save"></i> Save Changes</button>
+                <button class="cd-cancel" onclick="loadEditForm()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recruitment Modal -->
+<div class="cd-overlay" id="recruitModal" onclick="if(event.target===this)closeRecruitModal()">
+    <div class="cd-modal">
+        <div class="cd-mhead">
+            <h3><i class="fas fa-bullhorn" style="color:#10b981;margin-right:8px"></i>Post Recruitment Notice</h3>
+            <button class="cd-mclose" onclick="closeRecruitModal()">✕</button>
+        </div>
+        <div class="cd-mbody">
+            <div class="cd-fg"><label>Recruitment Title</label><input id="rTitle" placeholder="e.g. Accepting new members for 2026-27"></div>
+            <div class="cd-fg"><label>Description / Requirements</label><textarea id="rDesc" placeholder="Skills, eligibility, requirements..."></textarea></div>
+            <div class="cd-fg"><label>Last Date to Apply</label><input type="date" id="rDeadline"></div>
+            <div class="cd-fg"><label>Contact / How to Apply</label><input id="rContact" placeholder="e.g. Form link or email"></div>
+        </div>
+        <div class="cd-mfoot">
+            <button class="cd-cancel" onclick="closeRecruitModal()">Cancel</button>
+            <button class="cd-submit" onclick="postRecruitment()">Post Notice</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="cd-overlay" id="addMemberModal" onclick="if(event.target===this)closeAddMemberModal()">
+    <div class="cd-modal">
+        <div class="cd-mhead">
+            <h3><i class="fas fa-user-plus" style="color:#d97706;margin-right:8px"></i>Add Member</h3>
+            <button class="cd-mclose" onclick="closeAddMemberModal()">✕</button>
+        </div>
+        <div class="cd-mbody">
+            <div class="cd-fg"><label>Full Name</label><input id="newMemberName" placeholder="Member full name"></div>
+            <div class="cd-fg"><label>Email</label><input id="newMemberEmail" placeholder="member@nmiet.edu.in"></div>
+            <div class="cd-fg"><label>Role</label>
+                <select id="newMemberRole">
+                    <option value="Member">Member</option>
+                    <option value="Secretary">Secretary</option>
+                    <option value="Vice President">Vice President</option>
+                    <option value="President">President</option>
+                    <option value="Teacher">Teacher</option>
+                </select>
+            </div>
+            <div class="cd-fg"><label>Password</label><input type="password" id="newMemberPass" placeholder="Login password" value="member123"></div>
+        </div>
+        <div class="cd-mfoot">
+            <button class="cd-cancel" onclick="closeAddMemberModal()">Cancel</button>
+            <button class="cd-submit" onclick="addMember()">Add Member</button>
+        </div>
+    </div>
+</div>
+
+<!-- Post Event Modal -->
+<div class="cd-overlay" id="eventModal" onclick="if(event.target===this)closeEventModal()">
+    <div class="cd-modal">
+        <div class="cd-mhead">
+            <h3><i class="fas fa-calendar-plus" style="color:#8b5cf6;margin-right:8px"></i>Post Event</h3>
+            <button class="cd-mclose" onclick="closeEventModal()">✕</button>
+        </div>
+        <div class="cd-mbody">
+            <div class="cd-fg"><label>Event Title</label><input id="evTitle" placeholder="e.g. Annual Hackathon 2026"></div>
+            <div class="cd-fg"><label>Description</label><textarea id="evDesc" placeholder="Event details, agenda..."></textarea></div>
+            <div class="cd-fg"><label>Date</label><input type="date" id="evDate"></div>
+            <div class="cd-fg"><label>Venue</label><input id="evVenue" placeholder="e.g. IT Lab, Seminar Hall"></div>
+            <div class="cd-fg"><label>Type</label>
+                <select id="evType">
+                    <option value="tech">Technical</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="sports">Sports</option>
+                    <option value="seminar">Seminar</option>
+                    <option value="workshop">Workshop</option>
+                </select>
+            </div>
+        </div>
+        <div class="cd-mfoot">
+            <button class="cd-cancel" onclick="closeEventModal()">Cancel</button>
+            <button class="cd-submit" onclick="postEvent()">Post Event</button>
+        </div>
+    </div>
+</div>
+
+<div class="cd-toast" id="cdToast"></div>
+
+<footer class="footer"><div class="footer-top">© Copyright 2026 | <strong>NMIET Institute</strong> | All Rights Reserved | Project Done By: Sandesh, Kiran, Tejas</div></footer>
+
+<script>
+const CL_KEY='gfm_clubs_v2', REC_KEY='gfm_club_recruit', LOGO_KEY='gfm_club_logos', EV_KEY='gfm_club_events';
+const LABELS={tech:'Technical',cultural:'Cultural',sports:'Sports',social:'Social'};
+const CL_DEFAULTS=[
+  {id:1,name:'IIC',cat:'tech',emoji:'💻',desc:'Competitive programming, hackathons, DSA practice and open-source contributions.',coord:'Prof. Vivek Nagargoje',schedule:'Every Friday 5PM',members:87,members_list:[{role:'President',name:'Sandesh Shingankar',email:'arjun.codebits@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Priya Shah',email:'priya.codebits@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. Nagargoje',email:'vivek.nagargoje@nmiet.edu.in',pass:'teach123'},{role:'Secretary',name:'Riya Patil',email:'riya.codebits@nmiet.edu.in',pass:'sec123'}]},
+  {id:2,name:'SAIT',cat:'tech',emoji:'🤖',desc:'Build and program robots, IoT devices, and embedded systems.',coord:'Prof. Dheeraj Patil',schedule:'Saturday 10AM',members:54,members_list:[{role:'President',name:'Sahil Joshi',email:'sahil.robo@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Ananya Rao',email:'ananya.robo@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. D. Patil',email:'dheeraj.patil@nmiet.edu.in',pass:'teach123'}]},
+  {id:3,name:'Cultural Ensemble',cat:'cultural',emoji:'🎭',desc:'Classical and western music, dance, drama and street plays.',coord:'Prof. Hemlata Mane',schedule:'Wednesday 4PM',members:120,members_list:[{role:'President',name:'Kavya Desai',email:'kavya.cultural@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Rohan Ghosh',email:'rohan.cultural@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. H. Mane',email:'hemlata.mane@nmiet.edu.in',pass:'teach123'}]},
+  {id:4,name:'NSS',cat:'cultural',emoji:'🎤',desc:'Hone public speaking, debate, MUN, and journalism skills.',coord:'Prof. Bharti Dhote',schedule:'Tuesday 5PM',members:45,members_list:[{role:'President',name:'Nikhil Sharma',email:'nikhil.debate@nmiet.edu.in',pass:'pres123'},{role:'Teacher',name:'Prof. B. Dhote',email:'bharti.dhote@nmiet.edu.in',pass:'teach123'}]},
+  {id:5,name:'ASCS',cat:'sports',emoji:'⚽',desc:'Organises cricket, football, badminton and kabaddi teams.',coord:'Prof. Ajay Sonawane',schedule:'Daily 7AM',members:200,members_list:[{role:'President',name:'Siddharth More',email:'sid.sports@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Neha Kulkarni',email:'neha.sports@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. A. Sonawane',email:'ajay.sonawane@nmiet.edu.in',pass:'teach123'}]},
+  {id:6,name:'SAAI',cat:'social',emoji:'🌱',desc:'Environment sustainability drives, tree plantation, waste management.',coord:'Dr. Nitin Dhawas',schedule:'1st Saturday 9AM',members:62,members_list:[{role:'President',name:'Tanvi Joshi',email:'tanvi.green@nmiet.edu.in',pass:'pres123'},{role:'Teacher',name:'Dr. N. Dhawas',email:'nitin.dhawas@nmiet.edu.in',pass:'teach123'}]},
+  {id:7,name:'Entrepreneurship Cell',cat:'social',emoji:'🚀',desc:'Startup ideation, mentorship sessions, investor meets, and product hackathons.',coord:'Prof. Roshni Narkhede',schedule:'Thursday 4PM',members:78,members_list:[{role:'President',name:'Aditya Pandit',email:'adi.ecell@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Sneha Wagh',email:'sneha.ecell@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. R. Narkhede',email:'roshni.narkhede@nmiet.edu.in',pass:'teach123'}]},
+];
+
+let currentClubId = null;
+let currentRole   = null;
+let currentUser   = null;
+let clubData      = null;
+
+// ── INIT ──────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+    // Read session: club_id and role saved by college-clubs.html login
+    const session = JSON.parse(sessionStorage.getItem('clubSession') || '{}');
+    if (!session.clubId) { window.location.href = 'college-clubs.html'; return; }
+
+    currentClubId = session.clubId;
+    currentRole   = session.role;
+    currentUser   = session.user;
+
+    loadClub();
+    renderAll();
+});
+
+function loadClub() {
+    const clubs = JSON.parse(localStorage.getItem(CL_KEY) || 'null') || CL_DEFAULTS;
+    clubData = clubs.find(c => c.id === currentClubId);
+    if (!clubData) { window.location.href = 'college-clubs.html'; return; }
+}
+
+function saveClubs(clubs) { localStorage.setItem(CL_KEY, JSON.stringify(clubs)); }
+
+function renderAll() {
+    if (!clubData) return;
+    const logos = JSON.parse(localStorage.getItem(LOGO_KEY) || '{}');
+
+    // Hero
+    document.getElementById('navClubName').textContent = clubData.name;
+    document.getElementById('cdClubName').textContent  = clubData.name;
+    document.getElementById('cdClubDesc').textContent  = clubData.desc;
+    document.getElementById('cdRoleBadge').textContent = currentRole + (currentUser ? ' — ' + currentUser : '');
+
+    const logoEl = document.getElementById('cdLogoEl');
+    const logoSrc = logos[currentClubId];
+    logoEl.innerHTML = logoSrc ? `<img src="${logoSrc}" alt="${clubData.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : (clubData.emoji || '🏅');
+
+    // Stats
+    const recs   = getRecruits().filter(r => !r.expired);
+    const events = getEvents();
+    document.getElementById('statMembers').textContent  = clubData.members;
+    document.getElementById('statRecruits').textContent = recs.length;
+    document.getElementById('statEvents').textContent   = events.length;
+    document.getElementById('statSchedule').textContent = clubData.schedule || '—';
+
+    // Info
+    document.getElementById('infoCoord').textContent    = clubData.coord;
+    document.getElementById('infoSchedule').textContent = clubData.schedule;
+    document.getElementById('infoCat').textContent      = LABELS[clubData.cat] || clubData.cat;
+    document.getElementById('infoDesc').textContent     = clubData.desc;
+
+    renderMembers();
+    renderRecruitment();
+    renderEvents();
+    loadEditForm();
+}
+
+// ── LOGO ──
+document.getElementById('cdLogoWrap').onclick = () => {
+    if (canEdit()) document.getElementById('logoFileInput').click();
+};
+function handleLogoChange(e) {
+    const file = e.target.files?.[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        const logos = JSON.parse(localStorage.getItem(LOGO_KEY) || '{}');
+        logos[currentClubId] = ev.target.result;
+        localStorage.setItem(LOGO_KEY, JSON.stringify(logos));
+        renderAll(); showToast('🖼️ Club logo updated!');
+    };
+    reader.readAsDataURL(file);
+}
+
+// ── HELPERS ──
+function canEdit() { return ['President','Teacher'].includes(currentRole); }
+function getRecruits() { return JSON.parse(localStorage.getItem(REC_KEY) || '[]').filter(r => r.clubId === currentClubId); }
+function getAllRecruits() { return JSON.parse(localStorage.getItem(REC_KEY) || '[]'); }
+function saveAllRecruits(r) { localStorage.setItem(REC_KEY, JSON.stringify(r)); }
+function getEvents() { return JSON.parse(localStorage.getItem(EV_KEY + '_' + currentClubId) || '[]'); }
+function saveEvents(ev) { localStorage.setItem(EV_KEY + '_' + currentClubId, JSON.stringify(ev)); }
+
+// ── TABS ──
+function switchTab(tab) {
+    document.querySelectorAll('.cd-tab').forEach((t,i) => t.classList.remove('active'));
+    document.querySelectorAll('.cd-panel').forEach(p => p.classList.remove('active'));
+    const tabs = ['overview','members','recruitment','events','edit'];
+    const idx = tabs.indexOf(tab);
+    if (idx >= 0) {
+        document.querySelectorAll('.cd-tab')[idx].classList.add('active');
+        document.getElementById('panel-'+tab).classList.add('active');
+    }
+}
+
+// ── MEMBERS ──
+function renderMembers() {
+    const list = clubData.members_list || [];
+    const tbody = document.getElementById('membersTbody');
+    tbody.innerHTML = list.map((m, i) => `
+        <tr>
+            <td><strong>${m.name}</strong></td>
+            <td><span class="cd-role-chip ${m.role.split(' ')[0]}">${m.role}</span></td>
+            <td style="color:#6b7280">${m.email}</td>
+            <td>${canEdit() ? `<button class="cd-del-member" onclick="deleteMember(${i})"><i class="fas fa-trash"></i></button>` : '—'}</td>
+        </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:20px">No members listed.</td></tr>';
+
+    if (!canEdit()) document.getElementById('actionsHeader').textContent = '';
+}
+
+function deleteMember(idx) {
+    if (!canEdit()) { showToast('⛔ You do not have permission to remove members.'); return; }
+    if (!confirm('Remove this member?')) return;
+    const clubs = JSON.parse(localStorage.getItem(CL_KEY) || '[]');
+    const club = clubs.find(c => c.id === currentClubId);
+    if (club) { club.members_list.splice(idx, 1); club.members = Math.max(0, club.members - 1); saveClubs(clubs); loadClub(); renderAll(); showToast('🗑️ Member removed.'); }
+}
+
+function openAddMemberModal() {
+    if (!canEdit()) { showToast('⛔ Only Presidents and Teachers can add members.'); return; }
+    document.getElementById('addMemberModal').classList.add('active');
+}
+function closeAddMemberModal() { document.getElementById('addMemberModal').classList.remove('active'); }
+function addMember() {
+    const name = document.getElementById('newMemberName').value.trim();
+    const email = document.getElementById('newMemberEmail').value.trim();
+    const role = document.getElementById('newMemberRole').value;
+    const pass = document.getElementById('newMemberPass').value || 'member123';
+    if (!name || !email) { alert('Name and email are required.'); return; }
+    const clubs = JSON.parse(localStorage.getItem(CL_KEY) || '[]');
+    const club = clubs.find(c => c.id === currentClubId);
+    if (club) {
+        club.members_list = club.members_list || [];
+        club.members_list.push({ name, email, role, pass });
+        club.members++;
+        saveClubs(clubs); loadClub(); renderAll();
+        closeAddMemberModal(); showToast('✅ Member added!');
+    }
+}
+
+// ── RECRUITMENT ──
+function renderRecruitment() {
+    const recs = getRecruits();
+    const el = document.getElementById('recruitCards');
+    if (!recs.length) { el.innerHTML = '<p style="color:#9ca3af;text-align:center;padding:20px">No recruitment notices posted yet.</p>'; return; }
+    el.innerHTML = recs.map(r => `
+        <div class="cd-recruit-item ${r.expired ? 'expired' : ''}">
+            <div>
+                <div class="cd-recruit-title">${r.title} ${r.expired ? '<span style="font-size:11px;color:#9ca3af">(Expired)</span>' : '<span style="background:#d1fae5;color:#065f46;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px">Active</span>'}</div>
+                <div class="cd-recruit-meta">${r.desc}</div>
+                <div class="cd-recruit-meta" style="margin-top:4px"><i class="fas fa-clock" style="color:#d97706;margin-right:4px"></i>Deadline: ${r.deadline || 'Open'} · ${r.contact || ''}</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0">
+                ${!r.expired ? `<button class="cd-expire-btn" onclick="expireRecruit(${r.id})"><i class="fas fa-times"></i> Close</button>` : ''}
+                <button class="cd-delete-btn-sm" onclick="deleteRecruit(${r.id})"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`).join('');
+}
+
+function openRecruitModal() { document.getElementById('recruitModal').classList.add('active'); }
+function closeRecruitModal() { document.getElementById('recruitModal').classList.remove('active'); }
+function postRecruitment() {
+    const title = document.getElementById('rTitle').value.trim();
+    const desc  = document.getElementById('rDesc').value.trim();
+    if (!title || !desc) { alert('Title and description are required.'); return; }
+    const all = getAllRecruits();
+    all.unshift({ id: Date.now(), clubId: currentClubId, title, desc, deadline: document.getElementById('rDeadline').value, contact: document.getElementById('rContact').value.trim(), ts: Date.now(), expired: false });
+    saveAllRecruits(all);
+    closeRecruitModal(); renderAll(); showToast('📢 Recruitment notice posted!');
+    localStorage.setItem('gfm_recruit_ping', Date.now().toString());
+}
+function expireRecruit(id) {
+    const all = getAllRecruits();
+    const r = all.find(x => x.id === id); if (r) r.expired = true;
+    saveAllRecruits(all); renderAll(); showToast('✅ Recruitment closed.');
+}
+function deleteRecruit(id) {
+    if (!confirm('Delete this recruitment notice?')) return;
+    const all = getAllRecruits().filter(x => x.id !== id);
+    saveAllRecruits(all); renderAll(); showToast('🗑️ Notice deleted.');
+}
+
+// ── EVENTS ──
+function renderEvents() {
+    const evs = getEvents();
+    const el = document.getElementById('eventsList');
+    if (!evs.length) { el.innerHTML = '<p style="color:#9ca3af;text-align:center;padding:20px">No events posted yet.</p>'; return; }
+    el.innerHTML = evs.map(ev => `
+        <div class="cd-event-item">
+            <div>
+                <div class="cd-event-title">${ev.title}</div>
+                <div class="cd-event-meta">${ev.desc}</div>
+                <div class="cd-event-meta" style="margin-top:4px"><i class="fas fa-calendar" style="color:#8b5cf6;margin-right:4px"></i>${ev.date || 'TBD'} · 📍 ${ev.venue || 'TBD'}</div>
+            </div>
+            <button class="cd-delete-btn-sm" onclick="deleteEvent(${ev.id})"><i class="fas fa-trash"></i></button>
+        </div>`).join('');
+}
+
+function openEventModal() { document.getElementById('eventModal').classList.add('active'); }
+function closeEventModal() { document.getElementById('eventModal').classList.remove('active'); }
+function postEvent() {
+    const title = document.getElementById('evTitle').value.trim();
+    const desc  = document.getElementById('evDesc').value.trim();
+    if (!title) { alert('Event title is required.'); return; }
+    const evs = getEvents();
+    evs.unshift({ id: Date.now(), title, desc, date: document.getElementById('evDate').value, venue: document.getElementById('evVenue').value.trim(), type: document.getElementById('evType').value });
+    saveEvents(evs);
+    // Also push to shared events storage
+    const sharedEvs = JSON.parse(localStorage.getItem('gfm_events_v2') || '[]');
+    sharedEvs.unshift({ id: Date.now()+1, title, desc, date: document.getElementById('evDate').value, venue: document.getElementById('evVenue').value.trim(), type: document.getElementById('evType').value, club: clubData?.name || '' });
+    localStorage.setItem('gfm_events_v2', JSON.stringify(sharedEvs));
+    closeEventModal(); renderAll(); showToast('🎉 Event posted!');
+}
+function deleteEvent(id) {
+    if (!confirm('Delete this event?')) return;
+    const evs = getEvents().filter(e => e.id !== id);
+    saveEvents(evs); renderAll(); showToast('🗑️ Event deleted.');
+}
+
+// ── EDIT CLUB INFO ──
+function loadEditForm() {
+    if (!clubData) return;
+    document.getElementById('editClubName').value     = clubData.name || '';
+    document.getElementById('editClubDesc').value     = clubData.desc || '';
+    document.getElementById('editClubCoord').value    = clubData.coord || '';
+    document.getElementById('editClubSchedule').value = clubData.schedule || '';
+    document.getElementById('editClubCat').value      = clubData.cat || 'tech';
+    const note = document.getElementById('editPermNote');
+    if (!canEdit()) {
+        note.style.display = 'flex';
+        ['editClubName','editClubDesc','editClubCoord','editClubSchedule','editClubCat'].forEach(id => { const el = document.getElementById(id); if(el) el.disabled = true; });
+    } else {
+        note.style.display = 'none';
+    }
+}
+function saveClubInfo() {
+    if (!canEdit()) { showToast('⛔ Only Presidents and Teachers can edit club info.'); return; }
+    const clubs = JSON.parse(localStorage.getItem(CL_KEY) || '[]');
+    const club = clubs.find(c => c.id === currentClubId);
+    if (!club) return;
+    club.name     = document.getElementById('editClubName').value.trim() || club.name;
+    club.desc     = document.getElementById('editClubDesc').value.trim() || club.desc;
+    club.coord    = document.getElementById('editClubCoord').value.trim() || club.coord;
+    club.schedule = document.getElementById('editClubSchedule').value.trim() || club.schedule;
+    club.cat      = document.getElementById('editClubCat').value;
+    saveClubs(clubs); loadClub(); renderAll(); showToast('✅ Club information saved!');
+}
+
+// ── LOGOUT ──
+function doLogout() {
+    sessionStorage.removeItem('clubSession');
+    window.location.href = 'college-clubs.html';
+}
+
+// ── TOAST ──
+function showToast(msg) {
+    const t = document.getElementById('cdToast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

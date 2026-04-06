@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found – NMIET GFM</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+*{box-sizing:border-box}body{background:linear-gradient(135deg,#fff5f5 0%,#fef2f2 50%,#fee2e2 100%);font-family:'Inter',sans-serif;margin:0}
+.page-hero{background:linear-gradient(135deg,#7f1d1d,#dc2626,#ef4444);color:#fff;text-align:center;padding:70px 24px 60px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(252,165,165,.2) 0%,transparent 65%)}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;margin:0 0 10px;position:relative}
+.page-hero p{font-size:17px;opacity:.88;margin:0;position:relative}
+.lf-container{max-width:1100px;margin:0 auto;padding:44px 20px}
+.lf-logged-bar{background:linear-gradient(135deg,#fff5f5,#fff);border:2px solid #fecaca;border-radius:14px;padding:12px 18px;margin-bottom:22px;display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lf-logged-bar.show{display:flex}
+.lf-logged-bar span{font-size:14px;font-weight:700;color:#dc2626;display:flex;align-items:center;gap:8px}
+.lf-logout-btn{padding:8px 16px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.lf-del-old-btn{padding:9px 16px;background:linear-gradient(135deg,#fee2e2,#fecaca);color:#dc2626;border:2px solid #fca5a5;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;transition:all .2s}
+.lf-del-old-btn:hover{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border-color:#dc2626}
+.stats-row{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.stat-chip{background:#fff;border-radius:12px;padding:14px 20px;flex:1;min-width:130px;box-shadow:0 2px 10px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px}
+.stat-chip .sc-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.stat-chip .sc-val{font-size:22px;font-weight:800;color:#111827}
+.stat-chip .sc-lbl{font-size:12px;color:#6b7280;font-weight:600}
+.lf-toolbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:28px;background:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.lf-search{flex:1;min-width:200px;padding:11px 16px;border:2px solid #fecaca;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;font-family:'Inter',sans-serif}
+.lf-search:focus{border-color:#ef4444}
+.lf-filter{padding:11px 16px;border:2px solid #fecaca;border-radius:10px;font-size:14px;background:#fff;color:#374151;cursor:pointer;outline:none;font-family:'Inter',sans-serif}
+.lf-btn-report{padding:11px 22px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .2s,transform .15s;font-family:'Inter',sans-serif}
+.lf-btn-report:hover{opacity:.88;transform:translateY(-1px)}
+.lf-admin-btn{padding:11px 18px;background:linear-gradient(135deg,#374151,#111827);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;transition:opacity .2s}
+.lf-admin-btn:hover{opacity:.88}
+.lf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.lf-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);border:2px solid transparent;transition:all .25s;position:relative}
+.lf-card:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(0,0,0,.12);border-color:#fca5a5}
+.lf-card-badge{padding:8px 20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:6px}
+.lf-card-badge.lost{background:#fee2e2;color:#dc2626}
+.lf-card-badge.found{background:#d1fae5;color:#065f46}
+.lf-card-badge.claimed{background:#dbeafe;color:#1e40af}
+.lf-card-body{padding:18px 20px}
+.lf-card-title{font-size:17px;font-weight:700;color:#111827;margin-bottom:6px;font-family:'Syne',sans-serif}
+.lf-card-desc{font-size:13px;color:#6b7280;line-height:1.6;margin-bottom:12px}
+.lf-card-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px}
+.lf-meta-chip{background:#f3f4f6;color:#374151;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:4px}
+.lf-card-footer{padding:12px 20px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.lf-contact-btn{padding:7px 16px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:'Inter',sans-serif}
+.lf-contact-btn:hover{opacity:.85}
+.lf-claim-btn{padding:7px 14px;background:#d1fae5;color:#065f46;border:2px solid #6ee7b7;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.lf-claim-btn:hover{background:#059669;color:#fff;border-color:#059669}
+.lf-del-btn{position:absolute;top:10px;right:10px;background:#fee2e2;color:#dc2626;border:none;border-radius:7px;width:28px;height:28px;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:12px;transition:all .2s}
+.lf-del-btn:hover{background:#dc2626;color:#fff}
+.lf-del-btn.show{display:flex}
+/* Modal */
+.lf-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(4px)}
+.lf-overlay.active{display:flex}
+.lf-modal{background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:lf-in .25s ease}
+@keyframes lf-in{from{transform:translateY(20px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.lf-mhead{padding:20px 24px 16px;border-bottom:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0}
+.lf-mhead h3{margin:0;font-size:18px;font-weight:700;color:#111827;font-family:'Syne',sans-serif}
+.lf-mclose{background:#f3f4f6;border:none;border-radius:8px;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280}
+.lf-mclose:hover{background:#fee2e2;color:#dc2626}
+.lf-mbody{padding:22px 24px}
+.lf-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.lf-fg label{font-size:13px;font-weight:600;color:#374151}
+.lf-fg input,.lf-fg textarea,.lf-fg select{padding:10px 13px;border:1.5px solid #d1d5db;border-radius:9px;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s}
+.lf-fg input:focus,.lf-fg textarea:focus,.lf-fg select:focus{border-color:#ef4444}
+.lf-fg textarea{resize:vertical;min-height:80px}
+.lf-mfoot{padding:14px 24px 20px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px}
+.lf-cancel{padding:10px 20px;border:1.5px solid #d1d5db;border-radius:9px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.lf-submit{padding:10px 24px;border:none;border-radius:9px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.empty-state{text-align:center;padding:60px 20px;color:#9ca3af;font-size:16px}
+.empty-state .empty-icon{font-size:52px;display:block;margin-bottom:12px}
+.confirm-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10001;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(6px)}
+.confirm-dialog.active{display:flex}
+.confirm-box{background:#fff;border-radius:16px;padding:28px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:lf-in .2s ease}
+.confirm-box h4{margin:0 0 10px;font-size:18px;color:#111827}
+.confirm-box p{margin:0 0 20px;font-size:14px;color:#6b7280;line-height:1.6}
+.confirm-btns{display:flex;gap:10px;justify-content:center}
+.confirm-yes{padding:10px 24px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.confirm-no{padding:10px 20px;border:1.5px solid #d1d5db;border-radius:9px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.lf-toast{position:fixed;bottom:28px;right:28px;background:#7f1d1d;color:#fca5a5;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:99999;transform:translateY(20px);opacity:0;transition:all .35s cubic-bezier(.34,1.3,.64,1);max-width:340px;border-left:4px solid #ef4444}
+.lf-toast.show{transform:translateY(0);opacity:1}
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">Lost &amp; Found</h1>
+        <div></div>
+    </div>
+</nav>
+<div class="page-hero">
+    <h1>🔍 Lost &amp; Found</h1>
+    <p>Help reunite campus community members with their belongings</p>
+</div>
+<div class="lf-container">
+
+    <!-- Admin bar -->
+    <div id="lfLoggedBar" class="lf-logged-bar">
+        <span id="lfLoggedName"><i class="fas fa-shield-alt"></i> Admin Mode</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="lf-del-old-btn" onclick="confirmDeleteOld()"><i class="fas fa-trash-alt"></i> Delete Old Posts</button>
+            <button class="lf-logout-btn" onclick="doAdminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="lf-toolbar">
+        <input class="lf-search" id="lfSearch" type="text" placeholder="🔍  Search items…">
+        <select class="lf-filter" id="lfFilter">
+            <option value="all">All Items</option>
+            <option value="lost">Lost Only</option>
+            <option value="found">Found Only</option>
+            <option value="claimed">Claimed</option>
+        </select>
+        <select class="lf-filter" id="lfCatFilter">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Books">Books / Notes</option>
+            <option value="ID / Cards">ID / Cards</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Other">Other</option>
+        </select>
+        <button class="lf-btn-report" onclick="openReportModal()"><i class="fas fa-plus"></i> Report Item</button>
+        <button class="lf-admin-btn" id="lfAdminBtn" onclick="openAdminLogin()"><i class="fas fa-user-shield"></i> Admin</button>
+    </div>
+
+    <div class="lf-grid" id="lfGrid"></div>
+</div>
+
+<!-- Report Modal -->
+<div class="lf-overlay" id="lfModal" onclick="if(event.target===this)closeModal()">
+    <div class="lf-modal">
+        <div class="lf-mhead">
+            <h3><i class="fas fa-edit" style="color:#ef4444;margin-right:8px;"></i>Report an Item</h3>
+            <button class="lf-mclose" onclick="closeModal()">✕</button>
+        </div>
+        <div class="lf-mbody">
+            <div class="lf-fg"><label>Status</label>
+                <select id="rStatus"><option value="lost">Lost – I lost this item</option><option value="found">Found – I found this item</option></select>
+            </div>
+            <div class="lf-fg"><label>Item Name</label><input id="rName" placeholder="e.g. Blue Water Bottle"></div>
+            <div class="lf-fg"><label>Category</label>
+                <select id="rCat"><option>Electronics</option><option>Books / Notes</option><option>ID / Cards</option><option>Clothing</option><option>Accessories</option><option>Other</option></select>
+            </div>
+            <div class="lf-fg"><label>Description</label><textarea id="rDesc" placeholder="Describe the item (colour, brand, any markings…)"></textarea></div>
+            <div class="lf-fg"><label>Location (where lost/found)</label><input id="rLoc" placeholder="e.g. Library 2nd Floor"></div>
+            <div class="lf-fg"><label>Date</label><input type="date" id="rDate"></div>
+            <div class="lf-fg"><label>Your Contact (optional)</label><input id="rContact" placeholder="Phone or email"></div>
+        </div>
+        <div class="lf-mfoot">
+            <button class="lf-cancel" onclick="closeModal()">Cancel</button>
+            <button class="lf-submit" onclick="submitReport()">Submit Report</button>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Login Modal -->
+<div class="lf-overlay" id="adminModal" onclick="if(event.target===this)closeAdminModal()">
+    <div class="lf-modal" style="max-width:400px;">
+        <div class="lf-mhead">
+            <h3><i class="fas fa-user-shield" style="color:#dc2626;margin-right:8px;"></i>Admin Login</h3>
+            <button class="lf-mclose" onclick="closeAdminModal()">✕</button>
+        </div>
+        <div class="lf-mbody">
+            <div class="lf-fg"><label>Email</label><input type="email" id="adminEmail" placeholder="admin@nmiet.edu.in"></div>
+            <div class="lf-fg"><label>Password</label><input type="password" id="adminPass" placeholder="Password"></div>
+            <div style="color:#dc2626;font-size:13px;margin-bottom:8px;min-height:18px;" id="adminErr"></div>
+            <div style="background:#f9fafb;padding:10px 14px;border-radius:8px;font-size:12px;color:#6b7280;">
+                Demo: admin@nmiet.edu.in / admin123<br>Director: Director@nmiet.edu.in / Director123
+            </div>
+        </div>
+        <div class="lf-mfoot">
+            <button class="lf-cancel" onclick="closeAdminModal()">Cancel</button>
+            <button class="lf-submit" onclick="doAdminLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm dialog -->
+<div class="confirm-dialog" id="confirmDlg">
+    <div class="confirm-box">
+        <div style="font-size:40px;margin-bottom:12px;">🗑️</div>
+        <h4>Delete Old Posts?</h4>
+        <p id="confirmMsg">Delete all Lost &amp; Found posts older than 30 days?</p>
+        <div class="confirm-btns">
+            <button class="confirm-yes" id="confirmYes">Yes, Delete</button>
+            <button class="confirm-no" onclick="closeConfirm()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="lf-toast" id="lfToast"></div>
+<footer class="footer" id="contact"><div class="footer-top">© Copyright 2026 | <strong>NMIET Institute</strong> | All Rights Reserved</div></footer>
+<script src="scroll-to-top.js"></script>
+<script>
+const LF_KEY='gfm_lost_found';
+const ADMIN_ACCOUNTS=[
+    {email:'admin@nmiet.edu.in',pass:'admin123',name:'Admin'},
+    {email:'director@nmiet.edu.in',pass:'Director123',name:'Director'},
+    {email:'Director@nmiet.edu.in',pass:'Director123',name:'Director'},
+];
+const DEFAULTS=[
+    {id:1,status:'lost',name:'TI-84 Calculator',cat:'Electronics',desc:'Black Texas Instruments calculator with initials "RK" scratched on back.',loc:'Maths Lab, Room 204',date:'2026-03-28',contact:'rahulk@nmiet.edu.in'},
+    {id:2,status:'found',name:'Student ID Card',cat:'ID / Cards',desc:'NMIET ID card belonging to Priya Jadhav, SE-IT-A.',loc:'Canteen entrance',date:'2026-04-01',contact:'guard@nmiet.edu.in'},
+    {id:3,status:'lost',name:'Blue Backpack',cat:'Accessories',desc:'Navy blue Wildcraft bag with a keychain attached to the zipper.',loc:'Seminar Hall B',date:'2026-04-03',contact:'9876543210'},
+    {id:4,status:'found',name:'Data Structures Book',cat:'Books',desc:'Tanenbaum "Data Structures" 3rd edition, has sticky notes inside.',loc:'Library reading area',date:'2026-04-02',contact:'library@nmiet.edu.in'},
+    {id:5,status:'lost',name:'AirPods Case',cat:'Electronics',desc:'White AirPods Gen 2 case, no pods inside, small crack on lid.',loc:'Gym / Sports Complex',date:'2026-04-04',contact:''},
+];
+let isAdmin=false;
+function load(){try{return JSON.parse(localStorage.getItem(LF_KEY))||DEFAULTS}catch(e){return DEFAULTS}}
+function save(d){localStorage.setItem(LF_KEY,JSON.stringify(d))}
+
+function renderStats(){
+    const items=load();
+    document.getElementById('statsRow').innerHTML=`
+        <div class="stat-chip"><div class="sc-icon" style="background:#fee2e2">😟</div><div><div class="sc-val">${items.filter(i=>i.status==='lost').length}</div><div class="sc-lbl">Items Lost</div></div></div>
+        <div class="stat-chip"><div class="sc-icon" style="background:#d1fae5">🎉</div><div><div class="sc-val">${items.filter(i=>i.status==='found').length}</div><div class="sc-lbl">Items Found</div></div></div>
+        <div class="stat-chip"><div class="sc-icon" style="background:#dbeafe">✅</div><div><div class="sc-val">${items.filter(i=>i.status==='claimed').length}</div><div class="sc-lbl">Claimed</div></div></div>
+        <div class="stat-chip"><div class="sc-icon" style="background:#fef3c7">📦</div><div><div class="sc-val">${items.length}</div><div class="sc-lbl">Total</div></div></div>`;
+}
+
+function render(){
+    const items=load();
+    const q=document.getElementById('lfSearch').value.toLowerCase();
+    const flt=document.getElementById('lfFilter').value;
+    const cat=document.getElementById('lfCatFilter').value;
+    const grid=document.getElementById('lfGrid');
+    renderStats();
+    const filtered=items.filter(i=>{
+        if(flt!=='all'&&i.status!==flt)return false;
+        if(cat&&i.cat!==cat)return false;
+        if(q&&!i.name.toLowerCase().includes(q)&&!i.desc.toLowerCase().includes(q)&&!i.loc.toLowerCase().includes(q))return false;
+        return true;
+    });
+    if(!filtered.length){grid.innerHTML='<div class="empty-state"><span class="empty-icon">🔎</span>No items match your search.</div>';return}
+    const statusLabel={lost:'😟 LOST',found:'✅ FOUND',claimed:'📦 CLAIMED'};
+    grid.innerHTML=filtered.map(i=>`
+        <div class="lf-card">
+            ${isAdmin?`<button class="lf-del-btn show" onclick="deleteItem(${i.id})" title="Delete"><i class="fas fa-trash"></i></button>`:''}
+            <div class="lf-card-badge ${i.status}">${statusLabel[i.status]||i.status.toUpperCase()}</div>
+            <div class="lf-card-body">
+                <div class="lf-card-title">${i.name}</div>
+                <div class="lf-card-desc">${i.desc}</div>
+                <div class="lf-card-meta">
+                    <span class="lf-meta-chip"><i class="fas fa-tag"></i>${i.cat}</span>
+                    <span class="lf-meta-chip"><i class="fas fa-map-marker-alt"></i>${i.loc}</span>
+                    <span class="lf-meta-chip"><i class="fas fa-calendar"></i>${i.date}</span>
+                </div>
+            </div>
+            <div class="lf-card-footer">
+                ${i.status==='found'?`<button class="lf-claim-btn" onclick="claimItem(${i.id})"><i class="fas fa-hand-paper"></i> Mark Claimed</button>`:'<span></span>'}
+                ${i.contact?`<button class="lf-contact-btn" onclick="alert('Contact: ${i.contact}')"><i class="fas fa-phone"></i> Contact</button>`:''}
+            </div>
+        </div>`).join('');
+}
+
+function claimItem(id){
+    const items=load(),item=items.find(i=>i.id===id);
+    if(item){item.status='claimed';save(items);render();showToast('✅ Item marked as claimed!');}
+}
+function deleteItem(id){
+    if(!confirm('Delete this post?'))return;
+    save(load().filter(i=>i.id!==id));render();showToast('🗑️ Post deleted.');
+}
+
+function openAdminLogin(){document.getElementById('adminModal').classList.add('active');document.getElementById('adminErr').textContent=''}
+function closeAdminModal(){document.getElementById('adminModal').classList.remove('active')}
+function doAdminLogin(){
+    const e=document.getElementById('adminEmail').value.trim().toLowerCase();
+    const p=document.getElementById('adminPass').value;
+    const acc=ADMIN_ACCOUNTS.find(a=>a.email.toLowerCase()===e&&a.pass===p);
+    if(acc){
+        isAdmin=true;closeAdminModal();
+        document.getElementById('lfAdminBtn').style.display='none';
+        document.getElementById('lfLoggedBar').classList.add('show');
+        document.getElementById('lfLoggedName').innerHTML=`<i class="fas fa-shield-alt"></i> ${acc.name} — Admin Mode`;
+        render();showToast(`🛡️ Admin mode active`);
+    }else{document.getElementById('adminErr').textContent='Invalid credentials.'}
+}
+function doAdminLogout(){
+    isAdmin=false;
+    document.getElementById('lfAdminBtn').style.display='flex';
+    document.getElementById('lfLoggedBar').classList.remove('show');
+    render();showToast('👋 Admin mode off.');
+}
+
+function confirmDeleteOld(){
+    const items=load();
+    const cutoff=Date.now()-30*24*60*60*1000;
+    const old=items.filter(i=>new Date(i.date).getTime()<cutoff);
+    if(!old.length){showToast('✅ No posts older than 30 days.');return}
+    document.getElementById('confirmMsg').textContent=`Delete ${old.length} post(s) older than 30 days? This cannot be undone.`;
+    document.getElementById('confirmYes').onclick=()=>{save(items.filter(i=>new Date(i.date).getTime()>=cutoff));render();closeConfirm();showToast(`🗑️ Deleted ${old.length} old post(s).`);};
+    document.getElementById('confirmDlg').classList.add('active');
+}
+function closeConfirm(){document.getElementById('confirmDlg').classList.remove('active')}
+
+function openReportModal(){document.getElementById('rDate').value=new Date().toISOString().split('T')[0];document.getElementById('lfModal').classList.add('active')}
+function closeModal(){document.getElementById('lfModal').classList.remove('active')}
+function submitReport(){
+    const name=document.getElementById('rName').value.trim(),desc=document.getElementById('rDesc').value.trim();
+    if(!name||!desc){alert('Please fill in Item Name and Description.');return}
+    const items=load();
+    items.unshift({id:Date.now(),status:document.getElementById('rStatus').value,name,cat:document.getElementById('rCat').value,desc,loc:document.getElementById('rLoc').value.trim()||'Not specified',date:document.getElementById('rDate').value||new Date().toISOString().split('T')[0],contact:document.getElementById('rContact').value.trim()});
+    save(items);closeModal();render();showToast('📦 Item reported successfully!');
+    document.getElementById('rName').value='';document.getElementById('rDesc').value='';document.getElementById('rContact').value='';document.getElementById('rLoc').value='';
+}
+
+function showToast(msg){const t=document.getElementById('lfToast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+// Check Director session
+window.addEventListener('DOMContentLoaded',function(){
+    const sess=JSON.parse(sessionStorage.getItem('userSession')||'{}');
+    if(sess.role==='principal'){isAdmin=true;document.getElementById('lfAdminBtn').style.display='none';document.getElementById('lfLoggedBar').classList.add('show');document.getElementById('lfLoggedName').innerHTML='<i class="fas fa-shield-alt"></i> Director — Admin Mode';}
+    render();
+});
+document.getElementById('lfSearch').addEventListener('input',render);
+document.getElementById('lfFilter').addEventListener('change',render);
+document.getElementById('lfCatFilter').addEventListener('change',render);
+</script>
+</body>
+</html>

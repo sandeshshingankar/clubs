@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Director – NMIET Administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="hod.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+*{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;margin:0;background:#f0f2f8}
+
+/* ── LOGIN GATE ── */
+#loginGate{position:fixed;inset:0;background:linear-gradient(135deg,#0c1a4a,#1d4ed8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px}
+.login-gate-box{background:#fff;border-radius:22px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 30px 80px rgba(0,0,0,.35);text-align:center;animation:gateIn .35s cubic-bezier(.34,1.3,.64,1)}
+@keyframes gateIn{from{transform:translateY(30px) scale(.95);opacity:0}to{transform:none;opacity:1}}
+.login-gate-box .gate-logo{width:80px;height:80px;border-radius:50%;margin:0 auto 16px;border:3px solid #1d4ed8;overflow:hidden;background:#eff6ff;display:flex;align-items:center;justify-content:center}
+.login-gate-box .gate-logo img{width:100%;height:100%;object-fit:cover}
+.login-gate-box h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#1a237e;margin:0 0 4px}
+.login-gate-box p{font-size:14px;color:#6b7280;margin:0 0 24px}
+.gate-inp{width:100%;padding:12px 16px;border:2px solid #e0e7ff;border-radius:10px;font-size:14px;outline:none;font-family:'Inter',sans-serif;margin-bottom:12px;transition:border-color .2s}
+.gate-inp:focus{border-color:#3949ab}
+.gate-btn{width:100%;padding:13px;background:linear-gradient(135deg,#1d4ed8,#1a237e);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s}
+.gate-btn:hover{opacity:.88}
+.gate-err{color:#dc2626;font-size:13px;margin-bottom:10px;min-height:18px}
+.gate-demo{font-size:12px;color:#9ca3af;margin-top:14px;background:#f9fafb;padding:8px 12px;border-radius:8px}
+
+/* ── PAGE LAYOUT ── */
+#mainContent{display:none}
+.dir-hero{background:linear-gradient(135deg,#0c1a4a,#1a237e,#3949ab);color:#fff;padding:50px 24px 40px;position:relative;overflow:hidden}
+.dir-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(161,174,255,.15) 0%,transparent 65%)}
+.dir-hero-inner{max-width:1100px;margin:0 auto;position:relative;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.dir-photo{width:100px;height:100px;border-radius:50%;border:4px solid #7986cb;object-fit:cover;flex-shrink:0;box-shadow:0 6px 20px rgba(0,0,0,.35);cursor:pointer;transition:transform .2s}
+.dir-photo:hover{transform:scale(1.05)}
+.dir-hero-text h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,32px);font-weight:800;margin:0 0 4px}
+.dir-hero-text p{margin:0 0 8px;font-size:15px;opacity:.85}
+.dir-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;display:inline-block}
+.dir-hero-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+.dir-action-btn{padding:10px 18px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
+.dir-action-btn.edit{background:#7986cb;color:#fff}
+.dir-action-btn.edit:hover{background:#5c6bc0}
+.dir-action-btn.logout{background:rgba(239,68,68,.2);color:#fecaca;border:1px solid rgba(239,68,68,.3)}
+.dir-action-btn.logout:hover{background:rgba(239,68,68,.4)}
+
+/* ── MAIN ── */
+.dir-container{max-width:1100px;margin:0 auto;padding:36px 20px}
+.dir-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:32px}
+.dir-stat{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px}
+.dir-stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.dir-stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#111827;line-height:1}
+.dir-stat-lbl{font-size:13px;color:#6b7280;margin-top:3px}
+
+/* ── SECTIONS GRID ── */
+.dir-sections-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#111827;margin:0 0 16px;display:flex;align-items:center;gap:8px}
+.dir-sections-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:32px}
+.dir-section-card{background:#fff;border-radius:16px;padding:22px 20px;box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:14px}
+.dir-section-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.12);border-color:var(--card-accent,#3949ab)}
+.dir-section-card .card-emoji{font-size:32px;flex-shrink:0}
+.dir-section-card h4{margin:0 0 3px;font-size:15px;font-weight:700;color:#111827;font-family:'Syne',sans-serif}
+.dir-section-card p{margin:0;font-size:12px;color:#6b7280}
+.dir-section-card .count-badge{background:#eff6ff;color:#1e40af;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;margin-top:5px;display:inline-block}
+
+/* ── PANEL ── */
+.dir-panel{background:#fff;border-radius:18px;padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:24px;display:none;animation:panelIn .25s ease}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.dir-panel.open{display:block}
+.dir-panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #f3f4f6;flex-wrap:wrap;gap:12px}
+.dir-panel-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#111827;margin:0;display:flex;align-items:center;gap:8px}
+.dir-panel-close{background:#f3f4f6;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:#6b7280}
+.dir-panel-close:hover{background:#fee2e2;color:#dc2626}
+
+/* ── ITEMS LIST (notices, L&F, etc.) ── */
+.dir-item-list{display:flex;flex-direction:column;gap:10px}
+.dir-item{background:#f9fafb;border-radius:10px;padding:14px 16px;border-left:4px solid #3949ab;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.dir-item.urgent{border-left-color:#dc2626}
+.dir-item.exam{border-left-color:#7c3aed}
+.dir-item.holiday{border-left-color:#d97706}
+.dir-item.general{border-left-color:#10b981}
+.dir-item.lost{border-left-color:#dc2626}
+.dir-item.found{border-left-color:#10b981}
+.dir-item-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:3px}
+.dir-item-meta{font-size:12px;color:#6b7280}
+.dir-del-btn{padding:6px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;flex-shrink:0}
+.dir-del-btn:hover{background:#dc2626;color:#fff}
+
+/* ── FORM ── */
+.dir-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.dir-fg label{font-size:13px;font-weight:600;color:#374151}
+.dir-fg input,.dir-fg textarea,.dir-fg select{padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;width:100%}
+.dir-fg input:focus,.dir-fg textarea:focus,.dir-fg select:focus{border-color:#3949ab}
+.dir-fg textarea{resize:vertical;min-height:85px}
+.dir-btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.dir-btn{padding:10px 22px;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s}
+.dir-btn.primary{background:linear-gradient(135deg,#1d4ed8,#1a237e);color:#fff}
+.dir-btn.primary:hover{opacity:.88}
+.dir-btn.secondary{background:#f3f4f6;color:#374151}
+.dir-btn.danger{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff}
+.dir-del-old-btn{padding:9px 16px;background:linear-gradient(135deg,#fee2e2,#fecaca);color:#dc2626;border:2px solid #fca5a5;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;transition:all .2s}
+.dir-del-old-btn:hover{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border-color:#dc2626}
+
+/* ── ANNOUNCEMENT LIST ── */
+.dir-announce-item{background:#f9fafb;border-radius:10px;padding:14px 16px;border-left:4px solid #f59e0b;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.dir-announce-item h5{margin:0 0 3px;font-size:14px;font-weight:700;color:#111827}
+.dir-announce-item p{margin:0;font-size:13px;color:#374151}
+.dir-announce-item .ann-meta{font-size:12px;color:#9ca3af;margin-top:4px}
+.ann-recipients{display:inline-block;background:#fef3c7;color:#92400e;border-radius:12px;padding:2px 10px;font-size:11px;font-weight:700;margin-top:6px}
+
+/* ── EDIT MODAL ── */
+.dir-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(4px)}
+.dir-modal-overlay.active{display:flex}
+.dir-modal{background:#fff;border-radius:18px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:gateIn .25s ease}
+.dir-modal-head{padding:18px 22px 14px;border-bottom:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:18px 18px 0 0}
+.dir-modal-head h3{margin:0;font-size:17px;font-weight:700;font-family:'Syne',sans-serif;color:#1a237e}
+.dir-modal-body{padding:22px}
+.dir-modal-foot{padding:14px 22px 18px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px}
+
+/* ── TOAST ── */
+.dir-toast{position:fixed;bottom:28px;right:28px;background:#1a237e;color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:99999;transform:translateY(20px);opacity:0;transition:all .35s cubic-bezier(.34,1.3,.64,1);max-width:340px;border-left:4px solid #7986cb}
+.dir-toast.show{transform:translateY(0);opacity:1}
+
+/* ── RECIPIENT CHIPS ── */
+.recipient-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.recipient-chip{padding:6px 16px;border-radius:20px;border:2px solid #c5cae9;background:#f5f5ff;color:#444;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif}
+.recipient-chip.selected{background:#3949ab;color:#fff;border-color:#3949ab}
+
+@media(max-width:600px){.dir-hero-inner{flex-direction:column;text-align:center}.dir-hero-actions{margin:0 auto}}
+    </style>
+</head>
+<body>
+
+<!-- ── LOGIN GATE ── -->
+<div id="loginGate">
+    <div class="login-gate-box">
+        <div class="gate-logo"><img src="./principal.jpg" alt="Director" onerror="this.style.display='none';this.parentElement.innerHTML='🏛️'"></div>
+        <h2>Director Login</h2>
+        <p>NMIET Institute Administration Portal</p>
+        <input class="gate-inp" type="email" id="gateEmail" placeholder="Director@nmiet.edu.in" onkeydown="if(event.key==='Enter')doGateLogin()">
+        <input class="gate-inp" type="password" id="gatePass" placeholder="Password" onkeydown="if(event.key==='Enter')doGateLogin()">
+        <div class="gate-err" id="gateErr"></div>
+        <button class="gate-btn" onclick="doGateLogin()"><i class="fas fa-sign-in-alt"></i> Login as Director</button>
+        <div class="gate-demo">Demo: Director@nmiet.edu.in &nbsp;/&nbsp; Director123</div>
+    </div>
+</div>
+
+<!-- ── MAIN CONTENT (hidden until login) ── -->
+<div id="mainContent">
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">Director Panel</h1>
+        <div></div>
+    </div>
+</nav>
+
+<header class="hero-section"><img class="hero-banner" src="./hero-banner.png" alt="Institute Banner"></header>
+<section class="hero-text">
+    <h1>Institute Administration</h1>
+    <p>Director's Dashboard — Full System Control</p>
+</section>
+
+<!-- Director Hero Card -->
+<div class="dir-hero" id="dirHero">
+    <div class="dir-hero-inner">
+        <img class="dir-photo" src="./principal.jpg" id="dirPhoto" alt="Director" onerror="this.src='https://ui-avatars.com/api/?name=Director&background=3949ab&color=fff&size=100'" onclick="document.getElementById('photoInput').click()">
+        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoChange(event)">
+        <div class="dir-hero-text">
+            <h1 id="dirName">Dr. Pramod D. Patil</h1>
+            <p id="dirTitle">Director — NMIET Institute</p>
+            <span class="dir-badge">🏛️ Full System Access</span>
+        </div>
+        <div class="dir-hero-actions">
+            <button class="dir-action-btn edit" onclick="openEditModal()"><i class="fas fa-edit"></i> Edit Profile</button>
+            <button class="dir-action-btn logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+</div>
+
+<div class="dir-container">
+
+    <!-- Stats -->
+    <div class="dir-stats" id="dirStats">
+        <div class="dir-stat"><div class="dir-stat-icon" style="background:#e8eaf6">🏢</div><div><div class="dir-stat-val">5</div><div class="dir-stat-lbl">Departments</div></div></div>
+        <div class="dir-stat"><div class="dir-stat-icon" style="background:#fce7f3">🎓</div><div><div class="dir-stat-val" id="statStudents">—</div><div class="dir-stat-lbl">Students</div></div></div>
+        <div class="dir-stat"><div class="dir-stat-icon" style="background:#d1fae5">👨‍🏫</div><div><div class="dir-stat-val">65</div><div class="dir-stat-lbl">Faculty</div></div></div>
+        <div class="dir-stat"><div class="dir-stat-icon" style="background:#dbeafe">📢</div><div><div class="dir-stat-val" id="statNotices">—</div><div class="dir-stat-lbl">Notices</div></div></div>
+        <div class="dir-stat"><div class="dir-stat-icon" style="background:#fef3c7">🏆</div><div><div class="dir-stat-val">7</div><div class="dir-stat-lbl">Active Clubs</div></div></div>
+        <div class="dir-stat"><div class="dir-stat-icon" style="background:#fce7f3">🔍</div><div><div class="dir-stat-val" id="statLF">—</div><div class="dir-stat-lbl">L&F Posts</div></div></div>
+    </div>
+
+    <!-- Section Cards -->
+    <div class="dir-sections-title"><i class="fas fa-th" style="color:#3949ab"></i> Manage Sections</div>
+    <div class="dir-sections-grid">
+        <div class="dir-section-card" style="--card-accent:#2563eb" onclick="openPanel('noticesPanel')">
+            <div class="card-emoji">📢</div>
+            <div><h4>Notices</h4><p>Post, view & delete official notices</p><span class="count-badge" id="cNotices">— notices</span></div>
+        </div>
+        <div class="dir-section-card" style="--card-accent:#ef4444" onclick="openPanel('lfPanel')">
+            <div class="card-emoji">🔍</div>
+            <div><h4>Lost &amp; Found</h4><p>Review & delete L&F posts</p><span class="count-badge" id="cLF">— posts</span></div>
+        </div>
+        <div class="dir-section-card" style="--card-accent:#8b5cf6" onclick="openPanel('eventsPanel')">
+            <div class="card-emoji">🎉</div>
+            <div><h4>Events</h4><p>View & manage campus events</p><span class="count-badge" id="cEvents">— events</span></div>
+        </div>
+        <div class="dir-section-card" style="--card-accent:#f59e0b" onclick="openPanel('clubsPanel')">
+            <div class="card-emoji">🏆</div>
+            <div><h4>College Clubs</h4><p>Overview of all clubs</p><span class="count-badge" id="cClubs">— clubs</span></div>
+        </div>
+        <div class="dir-section-card" style="--card-accent:#10b981" onclick="openPanel('announcePanel')">
+            <div class="card-emoji">📣</div>
+            <div><h4>Announcements</h4><p>Send institute-wide messages</p><span class="count-badge" id="cAnnounce">— sent</span></div>
+        </div>
+        <div class="dir-section-card" style="--card-accent:#ec4899" onclick="openPanel('settingsPanel')">
+            <div class="card-emoji">⚙️</div>
+            <div><h4>Settings</h4><p>System configuration</p></div>
+        </div>
+    </div>
+
+    <!-- ── NOTICES PANEL ── -->
+    <div class="dir-panel" id="noticesPanel">
+        <div class="dir-panel-head">
+            <h3 class="dir-panel-title">📢 Important Notices</h3>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="dir-del-old-btn" onclick="deleteOldNotices()"><i class="fas fa-trash-alt"></i> Delete Old (30d+)</button>
+                <button class="dir-btn primary" onclick="openPostNoticeModal()"><i class="fas fa-plus"></i> Post Notice</button>
+                <button class="dir-panel-close" onclick="closePanel('noticesPanel')">✕</button>
+            </div>
+        </div>
+        <div class="dir-item-list" id="dirNoticeList"></div>
+    </div>
+
+    <!-- ── L&F PANEL ── -->
+    <div class="dir-panel" id="lfPanel">
+        <div class="dir-panel-head">
+            <h3 class="dir-panel-title">🔍 Lost &amp; Found Posts</h3>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="dir-del-old-btn" onclick="deleteOldLF()"><i class="fas fa-trash-alt"></i> Delete Old (30d+)</button>
+                <a href="lost-found.html" class="dir-btn secondary" style="text-decoration:none;padding:10px 18px;border-radius:9px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-external-link-alt"></i> Open Page</a>
+                <button class="dir-panel-close" onclick="closePanel('lfPanel')">✕</button>
+            </div>
+        </div>
+        <div class="dir-item-list" id="dirLFList"></div>
+    </div>
+
+    <!-- ── EVENTS PANEL ── -->
+    <div class="dir-panel" id="eventsPanel">
+        <div class="dir-panel-head">
+            <h3 class="dir-panel-title">🎉 Campus Events</h3>
+            <div style="display:flex;gap:8px;">
+                <a href="events.html" class="dir-btn secondary" style="text-decoration:none;padding:10px 18px;border-radius:9px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-external-link-alt"></i> Open Page</a>
+                <button class="dir-panel-close" onclick="closePanel('eventsPanel')">✕</button>
+            </div>
+        </div>
+        <div class="dir-item-list" id="dirEventsList"></div>
+    </div>
+
+    <!-- ── CLUBS PANEL ── -->
+    <div class="dir-panel" id="clubsPanel">
+        <div class="dir-panel-head">
+            <h3 class="dir-panel-title">🏆 College Clubs</h3>
+            <div style="display:flex;gap:8px;">
+                <a href="college-clubs.html" class="dir-btn secondary" style="text-decoration:none;padding:10px 18px;border-radius:9px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-external-link-alt"></i> Open Page</a>
+                <button class="dir-panel-close" onclick="closePanel('clubsPanel')">✕</button>
+            </div>
+        </div>
+        <div class="dir-item-list" id="dirClubsList"></div>
+    </div>
+
+    <!-- ── ANNOUNCEMENTS PANEL ── -->
+    <div class="dir-panel" id="announcePanel">
+        <div class="dir-panel-head">
+            <h3 class="dir-panel-title">📣 Institute Announcements</h3>
+            <button class="dir-panel-close" onclick="closePanel('announcePanel')">✕</button>
+        </div>
+        <div class="dir-fg"><label>Visible To</label>
+            <div class="recipient-row" id="announceRecipients">
+                <div class="recipient-chip selected" data-val="Students">Students</div>
+                <div class="recipient-chip" data-val="Parents">Parents</div>
+                <div class="recipient-chip" data-val="Faculty">Faculty</div>
+                <div class="recipient-chip" data-val="All">All</div>
+            </div>
+        </div>
+        <div class="dir-fg"><label>Title</label><input id="announceTitle" placeholder="Announcement title"></div>
+        <div class="dir-fg"><label>Message</label><textarea id="announceBody" placeholder="Write your announcement..."></textarea></div>
+        <div class="dir-btn-row">
+            <button class="dir-btn primary" onclick="postAnnouncement()"><i class="fas fa-bullhorn"></i> Post Announcement</button>
+        </div>
+        <div id="announceList" style="margin-top:20px"></div>
+    </div>
+
+    <!-- ── SETTINGS PANEL ── -->
+    <div class="dir-panel" id="settingsPanel">
+        <div class="dir-panel-head">
+            <h3 class="dir-panel-title">⚙️ Settings</h3>
+            <button class="dir-panel-close" onclick="closePanel('settingsPanel')">✕</button>
+        </div>
+        <p style="color:#6b7280;font-size:14px;margin:0 0 16px">System-wide configuration options.</p>
+        <div class="dir-fg" style="flex-direction:row;align-items:center;gap:12px;">
+            <label style="font-size:14px;font-weight:600;color:#374151;cursor:pointer;display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" style="width:auto;margin:0"> Enable Dark Mode (Preview)
+            </label>
+        </div>
+        <div class="dir-fg">
+            <label>Academic Year</label>
+            <select><option>2025–2026</option><option>2026–2027</option></select>
+        </div>
+        <div class="dir-btn-row">
+            <button class="dir-btn primary" onclick="showToast('✅ Settings saved!')">Save Settings</button>
+        </div>
+    </div>
+
+</div><!-- .dir-container -->
+
+<!-- ── EDIT PROFILE MODAL ── -->
+<div class="dir-modal-overlay" id="editModal" onclick="if(event.target===this)closeEditModal()">
+    <div class="dir-modal">
+        <div class="dir-modal-head">
+            <h3><i class="fas fa-user-edit" style="color:#3949ab;margin-right:8px"></i>Edit Director Profile</h3>
+            <button class="dir-panel-close" onclick="closeEditModal()">✕</button>
+        </div>
+        <div class="dir-modal-body">
+            <div style="text-align:center;margin-bottom:18px">
+                <img id="editPhotoPreview" src="./principal.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #7986cb;cursor:pointer" onclick="document.getElementById('photoInput').click()" onerror="this.src='https://ui-avatars.com/api/?name=D&background=3949ab&color=fff&size=80'">
+                <div style="font-size:12px;color:#9ca3af;margin-top:6px">Click photo to change</div>
+            </div>
+            <div class="dir-fg"><label>Full Name</label><input id="editName" value="Dr. Pramod D. Patil"></div>
+            <div class="dir-fg"><label>Title / Designation</label><input id="editTitle" value="Director"></div>
+            <div class="dir-fg"><label>Department / Institute</label><input id="editDept" value="NMIET Institute"></div>
+            <div class="dir-fg"><label>Qualification</label><input id="editQual" placeholder="e.g. Ph.D. in Computer Science"></div>
+            <div class="dir-fg"><label>Experience</label><input id="editExp" placeholder="e.g. 20+ Years in Academia"></div>
+            <div class="dir-fg"><label>Expertise</label><input id="editExpert" placeholder="e.g. Machine Learning, IoT"></div>
+        </div>
+        <div class="dir-modal-foot">
+            <button class="dir-btn secondary" onclick="closeEditModal()">Cancel</button>
+            <button class="dir-btn primary" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── POST NOTICE MODAL ── -->
+<div class="dir-modal-overlay" id="postNoticeModal" onclick="if(event.target===this)closePostNoticeModal()">
+    <div class="dir-modal">
+        <div class="dir-modal-head">
+            <h3><i class="fas fa-bullhorn" style="color:#2563eb;margin-right:8px"></i>Post a Notice</h3>
+            <button class="dir-panel-close" onclick="closePostNoticeModal()">✕</button>
+        </div>
+        <div class="dir-modal-body">
+            <div class="dir-fg"><label>Title</label><input id="pnTitle" placeholder="Notice title..."></div>
+            <div class="dir-fg"><label>Category</label>
+                <select id="pnCat"><option value="general">General</option><option value="urgent">Urgent</option><option value="exam">Exam</option><option value="holiday">Holiday</option></select>
+            </div>
+            <div class="dir-fg"><label>Content</label><textarea id="pnBody" placeholder="Write the full notice here..."></textarea></div>
+        </div>
+        <div class="dir-modal-foot">
+            <button class="dir-btn secondary" onclick="closePostNoticeModal()">Cancel</button>
+            <button class="dir-btn primary" onclick="postNoticeFromPanel()">Post Notice</button>
+        </div>
+    </div>
+</div>
+
+</div><!-- #mainContent -->
+
+<footer class="footer" id="contact">
+    <div class="footer-top">© Copyright 2026 | <strong>NMIET Institute</strong> | All Rights Reserved | Project Done By: Sandesh, Kiran, Tejas</div>
+    <div class="footer-bottom"><p>Our Team</p>
+        <div class="team-social">
+            <div class="member"><span>Sandesh Shingankar</span><a href="https://github.com/sandeshshingankar" title="GitHub"><i class="fab fa-github"></i></a><a href="https://www.linkedin.com/in/sandeshs-shingankar/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a></div>
+             <div class="member">
+                <span>Kiran Rathod</span>
+                <a href="https://github.com/Kiran-Rathod-R" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/kiranrathod-r/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="member"><span>Tejas Naiknaware</span><a href="https://github.com/tejasn369" title="GitHub"><i class="fab fa-github"></i></a><a href="https://www.linkedin.com/in/tejas-naiknaware/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a></div>
+        </div>
+    </div>
+    <button class="scroll-top" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
+</footer>
+<div class="dir-toast" id="dirToast"></div>
+<script src="scroll-to-top.js"></script>
+<script>
+// ── STORAGE KEYS ──
+const NC_KEY='gfm_notices', LF_KEY='gfm_lost_found', EV_KEY='gfm_events', CL_KEY='gfm_clubs_v2';
+const DIR_CRED={email:'Director@nmiet.edu.in',pass:'Director123'};
+
+// ── LOGIN GATE ──
+function doGateLogin(){
+    const e=document.getElementById('gateEmail').value.trim();
+    const p=document.getElementById('gatePass').value;
+    // Accept both capitalizations
+    if(e.toLowerCase()===DIR_CRED.email.toLowerCase()&&p===DIR_CRED.pass){
+        document.getElementById('loginGate').style.display='none';
+        document.getElementById('mainContent').style.display='block';
+        // Set session so other pages recognise Director
+        sessionStorage.setItem('userSession',JSON.stringify({role:'principal',time:Date.now()}));
+        updateDynamicStats();
+        showToast('🏛️ Welcome, Director!');
+    }else{document.getElementById('gateErr').textContent='Invalid Director credentials.'}
+}
+// Allow Enter key
+['gateEmail','gatePass'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doGateLogin()}));
+
+// Also allow if already session-logged-in
+window.addEventListener('DOMContentLoaded',function(){
+    const sess=JSON.parse(sessionStorage.getItem('userSession')||'{}');
+    if(sess.role==='principal'){
+        document.getElementById('loginGate').style.display='none';
+        document.getElementById('mainContent').style.display='block';
+        updateDynamicStats();
+    }
+});
+
+function doLogout(){
+    sessionStorage.removeItem('userSession');
+    window.location.href='index.html';
+}
+
+// ── PROFILE EDIT ──
+let directorData={name:'Dr. Pramod D. Patil',title:'Director — NMIET Institute',dept:'NMIET Institute',photoSrc:'./principal.jpg'};
+function openEditModal(){
+    document.getElementById('editName').value=directorData.name;
+    document.getElementById('editTitle').value=directorData.title;
+    document.getElementById('editDept').value=directorData.dept;
+    document.getElementById('editPhotoPreview').src=directorData.photoSrc;
+    document.getElementById('editModal').classList.add('active');
+}
+function closeEditModal(){document.getElementById('editModal').classList.remove('active')}
+function saveProfile(){
+    directorData.name=document.getElementById('editName').value.trim()||directorData.name;
+    directorData.title=document.getElementById('editTitle').value.trim()||directorData.title;
+    directorData.dept=document.getElementById('editDept').value.trim()||directorData.dept;
+    document.getElementById('dirName').textContent=directorData.name;
+    document.getElementById('dirTitle').textContent=directorData.title;
+    document.getElementById('dirPhoto').src=directorData.photoSrc;
+    closeEditModal();showToast('✅ Profile updated!');
+}
+function handlePhotoChange(e){
+    const file=e.target.files?.[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{directorData.photoSrc=ev.target.result;document.getElementById('dirPhoto').src=ev.target.result;document.getElementById('editPhotoPreview').src=ev.target.result;};
+    reader.readAsDataURL(file);
+}
+
+// ── PANELS ──
+function openPanel(id){
+    // Close others
+    document.querySelectorAll('.dir-panel').forEach(p=>p.classList.remove('open'));
+    const panel=document.getElementById(id);
+    panel.classList.add('open');
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+    // Load data
+    if(id==='noticesPanel')renderNoticesPanel();
+    else if(id==='lfPanel')renderLFPanel();
+    else if(id==='eventsPanel')renderEventsPanel();
+    else if(id==='clubsPanel')renderClubsPanel();
+}
+function closePanel(id){document.getElementById(id).classList.remove('open')}
+
+// ── NOTICES PANEL ──
+function renderNoticesPanel(){
+    const notices=JSON.parse(localStorage.getItem(NC_KEY)||'[]');
+    const el=document.getElementById('dirNoticeList');
+    if(!notices.length){el.innerHTML='<div style="color:#9ca3af;text-align:center;padding:20px">No notices yet.</div>';return}
+    el.innerHTML=notices.map(n=>`
+        <div class="dir-item ${n.cat}">
+            <div>
+                <div class="dir-item-title">${n.title}</div>
+                <div class="dir-item-meta"><i class="fas fa-calendar" style="margin-right:4px"></i>${n.date} · ${n.author}</div>
+            </div>
+            <button class="dir-del-btn" onclick="delNotice(${n.id})"><i class="fas fa-trash"></i> Delete</button>
+        </div>`).join('');
+}
+function delNotice(id){
+    if(!confirm('Delete this notice?'))return;
+    const notices=JSON.parse(localStorage.getItem(NC_KEY)||'[]').filter(n=>n.id!==id);
+    localStorage.setItem(NC_KEY,JSON.stringify(notices));renderNoticesPanel();updateDynamicStats();showToast('🗑️ Notice deleted.');
+}
+function deleteOldNotices(){
+    const notices=JSON.parse(localStorage.getItem(NC_KEY)||'[]');
+    const cutoff=Date.now()-30*24*60*60*1000;
+    const old=notices.filter(n=>new Date(n.date).getTime()<cutoff);
+    if(!old.length){showToast('✅ No notices older than 30 days.');return}
+    if(!confirm(`Delete ${old.length} notice(s) older than 30 days?`))return;
+    localStorage.setItem(NC_KEY,JSON.stringify(notices.filter(n=>new Date(n.date).getTime()>=cutoff)));
+    renderNoticesPanel();updateDynamicStats();showToast(`🗑️ Deleted ${old.length} old notice(s).`);
+}
+function openPostNoticeModal(){document.getElementById('postNoticeModal').classList.add('active')}
+function closePostNoticeModal(){document.getElementById('postNoticeModal').classList.remove('active')}
+function postNoticeFromPanel(){
+    const title=document.getElementById('pnTitle').value.trim(),body=document.getElementById('pnBody').value.trim();
+    if(!title||!body){alert('Title and content required.');return}
+    const notices=JSON.parse(localStorage.getItem(NC_KEY)||'[]');
+    notices.unshift({id:Date.now(),title,cat:document.getElementById('pnCat').value,body,author:'Director Office',date:new Date().toISOString().split('T')[0]});
+    localStorage.setItem(NC_KEY,JSON.stringify(notices));
+    closePostNoticeModal();renderNoticesPanel();updateDynamicStats();showToast('📢 Notice posted!');
+    document.getElementById('pnTitle').value='';document.getElementById('pnBody').value='';
+}
+
+// ── L&F PANEL ──
+function renderLFPanel(){
+    const items=JSON.parse(localStorage.getItem(LF_KEY)||'[]');
+    const el=document.getElementById('dirLFList');
+    if(!items.length){el.innerHTML='<div style="color:#9ca3af;text-align:center;padding:20px">No L&F posts.</div>';return}
+    el.innerHTML=items.map(i=>`
+        <div class="dir-item ${i.status}">
+            <div>
+                <div class="dir-item-title">${i.status==='lost'?'😟':'✅'} ${i.name}</div>
+                <div class="dir-item-meta">${i.cat} · ${i.loc} · ${i.date}</div>
+            </div>
+            <button class="dir-del-btn" onclick="delLF(${i.id})"><i class="fas fa-trash"></i> Delete</button>
+        </div>`).join('');
+}
+function delLF(id){
+    if(!confirm('Delete this post?'))return;
+    const items=JSON.parse(localStorage.getItem(LF_KEY)||'[]').filter(i=>i.id!==id);
+    localStorage.setItem(LF_KEY,JSON.stringify(items));renderLFPanel();updateDynamicStats();showToast('🗑️ Post deleted.');
+}
+function deleteOldLF(){
+    const items=JSON.parse(localStorage.getItem(LF_KEY)||'[]');
+    const cutoff=Date.now()-30*24*60*60*1000;
+    const old=items.filter(i=>new Date(i.date).getTime()<cutoff);
+    if(!old.length){showToast('✅ No posts older than 30 days.');return}
+    if(!confirm(`Delete ${old.length} post(s) older than 30 days?`))return;
+    localStorage.setItem(LF_KEY,JSON.stringify(items.filter(i=>new Date(i.date).getTime()>=cutoff)));
+    renderLFPanel();updateDynamicStats();showToast(`🗑️ Deleted ${old.length} old post(s).`);
+}
+
+// ── EVENTS PANEL ──
+const EV_DEFAULTS=[{id:1,name:'NMIET Tech Fest 2026',type:'tech',date:'2026-04-18',org:'Technical Committee'},{id:2,name:'Rhythm & Soul – Cultural Night',type:'cultural',date:'2026-04-25',org:'Cultural Ensemble'}];
+function renderEventsPanel(){
+    const events=JSON.parse(localStorage.getItem(EV_KEY)||JSON.stringify(EV_DEFAULTS));
+    const el=document.getElementById('dirEventsList');
+    if(!events.length){el.innerHTML='<div style="color:#9ca3af;text-align:center;padding:20px">No events.</div>';return}
+    el.innerHTML=events.map(e=>`
+        <div class="dir-item" style="border-left-color:#8b5cf6">
+            <div>
+                <div class="dir-item-title">🎉 ${e.name}</div>
+                <div class="dir-item-meta">${e.type} · ${e.date} · ${e.org||''}</div>
+            </div>
+            <button class="dir-del-btn" onclick="delEvent(${e.id})"><i class="fas fa-trash"></i> Delete</button>
+        </div>`).join('');
+}
+function delEvent(id){
+    if(!confirm('Delete this event?'))return;
+    const events=JSON.parse(localStorage.getItem(EV_KEY)||'[]').filter(e=>e.id!==id);
+    localStorage.setItem(EV_KEY,JSON.stringify(events));renderEventsPanel();updateDynamicStats();showToast('🗑️ Event deleted.');
+}
+
+// ── CLUBS PANEL ──
+const CL_DEFAULTS=[{id:1,name:'CodeBits Club',cat:'tech',members:87},{id:2,name:'Robotics & IoT Club',cat:'tech',members:54},{id:3,name:'Cultural Ensemble',cat:'cultural',members:120},{id:4,name:'Debate & Oratory Society',cat:'cultural',members:45},{id:5,name:'Nexus Sports Club',cat:'sports',members:200},{id:6,name:'Green Campus Initiative',cat:'social',members:62},{id:7,name:'Entrepreneurship Cell',cat:'social',members:78}];
+function renderClubsPanel(){
+    const clubs=JSON.parse(localStorage.getItem(CL_KEY)||JSON.stringify(CL_DEFAULTS));
+    const el=document.getElementById('dirClubsList');
+    el.innerHTML=clubs.map(c=>`
+        <div class="dir-item" style="border-left-color:#d97706">
+            <div>
+                <div class="dir-item-title">🏆 ${c.name}</div>
+                <div class="dir-item-meta">${c.cat} · ${c.members} members</div>
+            </div>
+        </div>`).join('');
+}
+
+// ── ANNOUNCEMENTS ──
+let announcements=JSON.parse(localStorage.getItem('dir_announcements')||'[]');
+let selRecipients=['Students'];
+document.querySelectorAll('#announceRecipients .recipient-chip').forEach(chip=>{
+    chip.onclick=function(){
+        const val=this.dataset.val;
+        if(val==='All'){selRecipients=['All'];document.querySelectorAll('#announceRecipients .recipient-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');}
+        else{document.querySelector('#announceRecipients .recipient-chip[data-val="All"]').classList.remove('selected');selRecipients=selRecipients.filter(v=>v!=='All');this.classList.toggle('selected');if(this.classList.contains('selected')){if(!selRecipients.includes(val))selRecipients.push(val);}else{selRecipients=selRecipients.filter(v=>v!==val);}if(!selRecipients.length){selRecipients=['Students'];document.querySelector('#announceRecipients .recipient-chip[data-val="Students"]').classList.add('selected');}}
+    };
+});
+function postAnnouncement(){
+    const title=document.getElementById('announceTitle').value.trim(),body=document.getElementById('announceBody').value.trim();
+    if(!title||!body){showToast('⚠️ Title and message required.');return}
+    announcements.unshift({id:Date.now(),title,body,to:[...selRecipients],time:new Date().toLocaleString()});
+    localStorage.setItem('dir_announcements',JSON.stringify(announcements));
+    renderAnnouncements();document.getElementById('announceTitle').value='';document.getElementById('announceBody').value='';
+    showToast(`📣 Announcement posted to ${selRecipients.join(' & ')}!`);
+}
+function renderAnnouncements(){
+    const el=document.getElementById('announceList');
+    document.getElementById('cAnnounce').textContent=announcements.length+' sent';
+    if(!announcements.length){el.innerHTML='<div style="color:#9ca3af;font-size:14px;text-align:center;padding:16px">No announcements yet.</div>';return}
+    el.innerHTML=announcements.map(a=>`
+        <div class="dir-announce-item">
+            <div>
+                <h5>📣 ${a.title}</h5>
+                <p>${a.body}</p>
+                <div class="ann-meta">${a.time}</div>
+                <span class="ann-recipients">To: ${a.to.join(', ')}</span>
+            </div>
+            <button class="dir-del-btn" onclick="delAnnounce(${a.id})"><i class="fas fa-trash"></i></button>
+        </div>`).join('');
+}
+function delAnnounce(id){announcements=announcements.filter(a=>a.id!==id);localStorage.setItem('dir_announcements',JSON.stringify(announcements));renderAnnouncements();}
+
+// ── DYNAMIC STATS ──
+function updateDynamicStats(){
+    const notices=JSON.parse(localStorage.getItem(NC_KEY)||'[]');
+    const lf=JSON.parse(localStorage.getItem(LF_KEY)||'[]');
+    const events=JSON.parse(localStorage.getItem(EV_KEY)||'[]');
+    const clubs=JSON.parse(localStorage.getItem(CL_KEY)||JSON.stringify(CL_DEFAULTS));
+    document.getElementById('statNotices').textContent=notices.length||5;
+    document.getElementById('statLF').textContent=lf.length||5;
+    document.getElementById('cNotices').textContent=(notices.length||5)+' notices';
+    document.getElementById('cLF').textContent=(lf.length||5)+' posts';
+    document.getElementById('cEvents').textContent=(events.length||6)+' events';
+    document.getElementById('cClubs').textContent=clubs.length+' clubs';
+    const totalMembers=clubs.reduce((s,c)=>s+(c.members||0),0);
+    document.getElementById('statStudents').textContent=totalMembers||1200;
+    renderAnnouncements();
+}
+
+// ── SETTINGS ──
+function toggleDarkMode(){
+    const on=document.getElementById('darkModeToggle').checked;
+    document.body.style.filter=on?'invert(1) hue-rotate(180deg)':'';
+    showToast(on?'🌙 Dark mode on':'☀️ Dark mode off');
+}
+
+// ── TOAST ──
+function showToast(msg){const t=document.getElementById('dirToast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+</script>
+</body>
+</html>

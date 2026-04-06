@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - IT Department</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="student.css">
+    <link rel="stylesheet" href="footer.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ════════════════════════════════════
+           MODAL OVERLAY
+        ════════════════════════════════════ */
+        .s-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 30, 0.62);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            backdrop-filter: blur(4px);
+        }
+        .s-modal-overlay.active { display: flex; }
+
+        /* ════════════════════════════════════
+           MODAL BOX
+        ════════════════════════════════════ */
+        .s-modal {
+            background: #fff;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 64px rgba(0,0,0,.28);
+            animation: sModalIn .28s cubic-bezier(.34,1.3,.64,1);
+            scrollbar-width: thin;
+        }
+        @keyframes sModalIn {
+            from { transform: translateY(30px) scale(.97); opacity: 0; }
+            to   { transform: translateY(0)    scale(1);   opacity: 1; }
+        }
+
+        /* ── Header ── */
+        .s-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px 16px;
+            border-bottom: 1.5px solid #eef0f4;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 2;
+            border-radius: 18px 18px 0 0;
+        }
+        .s-modal-header h3 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .s-modal-header h3 i { color: #2563eb; }
+        .s-modal-close {
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            width: 34px; height: 34px;
+            font-size: 18px;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .15s, color .15s;
+        }
+        .s-modal-close:hover { background: #fee2e2; color: #dc2626; }
+
+        /* ── Body ── */
+        .s-modal-body { padding: 22px 24px; }
+
+        /* ── Photo Upload Zone ── */
+        .photo-upload-zone {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #f8faff;
+            border: 2px dashed #bfdbfe;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+        }
+        .photo-upload-zone:hover { border-color: #2563eb; background: #eff6ff; }
+
+        .photo-preview-wrap { position: relative; flex-shrink: 0; }
+        .photo-preview {
+            width: 76px; height: 76px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2563eb;
+            display: block;
+        }
+        .photo-change-badge {
+            position: absolute;
+            bottom: 0; right: 0;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 50%;
+            width: 22px; height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            border: 2px solid #fff;
+        }
+        .photo-upload-text strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 3px;
+        }
+        .photo-upload-text span { font-size: 12px; color: #6b7280; }
+        #photoFileInput { display: none; }
+
+        /* ── Section Titles ── */
+        .s-section-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .9px;
+            color: #2563eb;
+            margin: 20px 0 12px;
+            padding-bottom: 7px;
+            border-bottom: 2px solid #dbeafe;
+        }
+
+        /* ── Form Grid ── */
+        .s-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 460px) { .s-form-row { grid-template-columns: 1fr; } }
+
+        .s-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 14px;
+        }
+        .s-form-group label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .s-form-group label i { color: #2563eb; font-size: 12px; }
+
+        .s-form-group input {
+            padding: 10px 13px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 14px;
+            color: #111827;
+            outline: none;
+            font-family: inherit;
+            background: #fff;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .s-form-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.14);
+        }
+        .s-form-group input::placeholder { color: #9ca3af; }
+
+        /* Input with prefix icon */
+        .input-icon-wrap { position: relative; display: flex; align-items: center; }
+        .input-icon-wrap i {
+            position: absolute;
+            left: 13px;
+            color: #6b7280;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        .input-icon-wrap input { padding-left: 36px; }
+
+        /* ── Modal Footer ── */
+        .s-modal-footer {
+            padding: 14px 24px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1.5px solid #eef0f4;
+        }
+        .s-btn-cancel {
+            padding: 10px 22px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 9px;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: background .15s;
+        }
+        .s-btn-cancel:hover { background: #f3f4f6; }
+        .s-btn-save {
+            padding: 10px 26px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(37,99,235,.35);
+            transition: opacity .2s, transform .15s;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .s-btn-save:hover { opacity: .88; transform: translateY(-1px); }
+
+        /* ════════════════════════════════════
+           SUCCESS TOAST
+        ════════════════════════════════════ */
+        .s-toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(70px);
+            background: #16a34a;
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10000;
+            box-shadow: 0 8px 24px rgba(0,0,0,.18);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: transform .38s cubic-bezier(.34,1.5,.64,1), opacity .28s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .s-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* ════════════════════════════════════
+           LIVE QUICK-TAGS (shown on profile card)
+        ════════════════════════════════════ */
+        .live-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 8px;
+        }
+        .live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 11px;
+            border-radius: 20px;
+            text-decoration: none;
+        }
+        .live-tag.class-tag   { background:#dbeafe; color:#1e40af; }
+        .live-tag.roll-tag    { background:#fef9c3; color:#854d0e; }
+        .live-tag.contact-tag { background:#dcfce7; color:#166534; }
+        .live-tag.li-tag      { background:#e0f2fe; color:#0369a1; }
+        .live-tag.gh-tag      { background:#f3f4f6; color:#111827; }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">Student Portal</h1>
+        <div></div>
+    </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero-section">
+    <img class="hero-banner" src="hero-banner.png" alt="IT Department Banner">
+</header>
+
+<section class="hero-text">
+    <h1>Student Portal</h1>
+    <p>Empowering Education Through Technology</p>
+</section>
+
+<!-- ================= MAIN ================= -->
+<main class="container">
+
+    <!-- ===== PROFILE CARD ===== -->
+    <section class="profile-section">
+        <div class="profile-card">
+
+            <div class="profile-header">
+                <!-- Photo updated live by edit modal -->
+                <img id="profilePhoto" src="sandesh.png" alt="Student Profile" class="profile-image">
+
+                <div class="profile-details">
+                    <h2 id="studentName" class="student-name">Student Name</h2>
+
+                    <div class="profile-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Class:</span>
+                            <span id="displayClass" class="info-value">—</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Roll No:</span>
+                            <span id="studentRoll" class="info-value">Roll</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Contact:</span>
+                            <span id="displayContact" class="info-value">8668916036</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span id="studentEmail" class="info-value">Email</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">LinkedIn:</span>
+                            <a id="displayLinkedIn"
+                               href="https://linkedin.com/in/sandeshshingankar"
+                               class="info-link" target="_blank">
+                                linkedin.com/in/sandeshshingankar
+                            </a>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">GitHub:</span>
+                            <a id="displayGitHub"
+                               href="https://github.com/sandeshshingankar"
+                               class="info-link" target="_blank">
+                                github.com/sandeshshingankar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Live tags populated after saving -->
+                    <div class="live-tags" id="liveTags" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Profile Actions -->
+            <div class="profile-actions">
+                <!-- ✅ Edit button now opens the modal -->
+                <button class="action-btn edit-btn" onclick="openStudentModal()">
+                    <i class="fas fa-pen" style="margin-right:5px;"></i>Edit
+                </button>
+                <button class="action-btn delete-btn">Delete</button>
+                <button class="action-btn upload-btn">Upload Documents</button>
+                <button class="action-btn delete-btn" onclick="openDocumentUpload()">Add Document</button>
+                <input type="file" id="documentInput" style="display:none" />
+                <p id="documentName" style="margin-top:10px;color:green;"></p>
+            </div>
+
+        </div>
+    </section>
+
+        <!-- Student Details -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="student-details">
+                <span class="btn-icon">👤</span>
+                <span class="btn-label">Student Details</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="student-details">
+                <div class="content-wrapper">
+                    <div class="detail-grid">
+                        <div class="detail-item"><label>Date of Birth:</label><p>24/04/2005</p></div>
+                        <div class="detail-item"><label>Gender:</label><p>Male</p></div>
+                        <div class="detail-item"><label>Roll Number:</label><p id="detailRoll">70</p></div>
+                        <div class="detail-item"><label>Enrollment Date:</label><p>15th August 2023</p></div>
+                        <div class="detail-item"><label>Address:</label><p>Pune, Maharashtra, India</p></div>
+                        <div class="detail-item"><label>Blood Group:</label><p>O+</p></div>
+                    </div>
+                    <div class="guardian-info">
+                        <h3>Guardian Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Father's Name:</label><p>Ashok Shingankar</p></div>
+                            <div class="detail-item"><label>Mother's Name:</label><p>Usha Shingankar</p></div>
+                            <div class="detail-item"><label>Guardian Contact:</label><p>8668916936</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Overview -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="attendance-overview">
+                <span class="btn-icon">📊</span>
+                <span class="btn-label">Attendance Overview</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="attendance-overview">
+                <div class="content-wrapper">
+                    <div class="attendance-stats">
+                        <div style="margin-top:20px;">
+                            <button id="presentBtn" class="action-btn edit-btn">Mark Present</button>
+                            <button id="absentBtn" class="action-btn delete-btn">Mark Absent</button>
+                        </div>
+                        <div class="stat-box"><div class="stat-label">Total Classes</div><div id="totalClasses" class="stat-value">75</div></div>
+                        <div class="stat-box"><div class="stat-label">Present</div><div id="presentCount" class="stat-value present">72</div></div>
+                        <div class="stat-box"><div class="stat-label">Absent</div><div id="absentCount" class="stat-value absent">3</div></div>
+                        <div class="stat-box"><div class="stat-label">Attendance %</div><div id="attendancePercent" class="stat-value percentage">96%</div></div>
+                    </div>
+                    <div class="attendance-note">
+                        <p><strong>Note:</strong> Your maintains excellent attendance. Please ensure consistent participation for better academic performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Performance -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="academic-performance">
+                <span class="btn-icon">🎓</span>
+                <span class="btn-label">Academic Performance &amp; Results</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="academic-performance">
+                <div class="content-wrapper">
+                    <div class="semester-results">
+                        <h3>Semester Results</h3>
+                        <div style="margin-bottom:20px;">
+                            <input type="text" id="subjectInput" placeholder="Subject Name">
+                            <input type="number" id="marksInput" placeholder="Marks">
+                            <input type="text" id="gradeInput" placeholder="Grade">
+                            <button id="addMarksBtn" class="action-btn edit-btn">Add Marks</button>
+                        </div>
+                        <div class="marks-table" id="marksTable">
+                            <div class="marks-header">
+                                <div class="marks-col">Subject</div>
+                                <div class="marks-col">Marks</div>
+                                <div class="marks-col">Grade</div>
+                            </div>
+                            <div class="marks-row"><div class="marks-col">Computer Networks &amp; Security</div><div class="marks-col">88</div><div class="marks-col">A</div></div>
+                            <div class="marks-row"><div class="marks-col">Data Science and Big Data Analytics</div><div class="marks-col">92</div><div class="marks-col">A+</div></div>
+                            <div class="marks-row"><div class="marks-col">Web Application Development</div><div class="marks-col">85</div><div class="marks-col">A</div></div>
+                            <div class="marks-row"><div class="marks-col">Elective-II</div><div class="marks-col">90</div><div class="marks-col">A+</div></div>
+                            <div class="marks-row"><div class="marks-col">Internship</div><div class="marks-col">87</div><div class="marks-col">A</div></div>
+                        </div>
+                    </div>
+                    <div class="academic-summary">
+                        <p><strong>Current SGPA:</strong> 8.84</p>
+                        <p><strong>Performance:</strong> Excellent - Keep up the great work!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notices & Announcements -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="notices">
+                <span class="btn-icon">📢</span>
+                <span class="btn-label">Notices &amp; Announcements</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="notices">
+                <div class="content-wrapper">
+                    <div class="notices-list">
+                        <div class="notice-item">
+                            <div class="notice-header"><h4>Exam Schedule Released</h4><span class="notice-date">20th Jan 2026</span></div>
+                            <p>The End Semester Examination schedule has been released. Please ensure your child is well-prepared for the exams starting from 22nd January.</p>
+                        </div>
+                        <div class="notice-item">
+                            <div class="notice-header"><h4>Project Submission Deadline</h4><span class="notice-date">18th Jan 2026</span></div>
+                            <p>All students must submit their semester projects by 25th January. Late submissions will incur a penalty.</p>
+                        </div>
+                        <div class="notice-item">
+                            <div class="notice-header"><h4>Internship Drive Schedule</h4><span class="notice-date">15th Jan 2025</span></div>
+                            <p>Companies will visit the college for internship recruitment on 5th February. Eligible students are requested to register at the placement office.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="documents">
+                <span class="btn-icon">📄</span>
+                <span class="btn-label">Documents</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="documents">
+                <div class="content-wrapper">
+                    <div class="documents-list">
+                        <div class="document-item">
+                            <span class="doc-icon">📋</span>
+                            <div class="doc-info"><h4>Admit Card - End Semester Exam</h4><p>Issued on: 20th January 2025</p></div>
+                            <a href="#" class="doc-btn">Download</a>
+                        </div>
+                        <div class="document-item">
+                            <span class="doc-icon">📊</span>
+                            <div class="doc-info"><h4>Semester Transcript</h4><p>Previous Semester - December 2024</p></div>
+                            <a href="#" class="doc-btn">Download</a>
+                        </div>
+                        <div class="document-item">
+                            <span class="doc-icon">🎓</span>
+                            <div class="doc-info"><h4>Certificate of Participation</h4><p>Technical Seminar - January 2025</p></div>
+                            <a href="#" class="doc-btn">Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="expandable-section">
+            <button class="expand-btn" aria-expanded="false" aria-controls="notifications">
+                <span class="btn-icon">💬</span>
+                <span class="btn-label">Student Notifications &amp; Messages</span>
+                <span class="expand-icon">›</span>
+            </button>
+            <div class="expand-content" id="notifications">
+                <div class="content-wrapper">
+                    <div class="notifications-list">
+                        <div class="notification-item from-faculty">
+                            <div class="notif-header"><h4>From: Prof. Nitin Wankhade</h4><span class="notif-date">18th Jan 2025</span></div>
+                            <p>Your has shown excellent progress in the Data Structures course. Keep encouraging him to maintain this performance.</p>
+                        </div>
+                        <div class="notification-item from-admin">
+                            <div class="notif-header"><h4>From: Department Administration</h4><span class="notif-date">15th Jan 2025</span></div>
+                            <p>Attendance reminder: Please ensure your maintains 75% minimum attendance to be eligible for end semester exams.</p>
+                        </div>
+                        <div class="notification-item from-faculty">
+                            <div class="notif-header"><h4>From: Prof. Sonali Dongare</h4><span class="notif-date">10th Jan 2025</span></div>
+                            <p>Your assignment submission for Database Management was exemplary. Encouraging work!</p>
+                        </div>
+                    </div>
+                    <div class="notification-note">
+                        <p>These messages are sent by faculty and administration for your information. Please contact the department if you have any concerns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<!-- ══════════════════════════════════════════
+     STUDENT EDIT MODAL
+══════════════════════════════════════════ -->
+<div class="s-modal-overlay" id="studentModal" onclick="handleModalOverlay(event)">
+    <div class="s-modal" role="dialog" aria-modal="true" aria-labelledby="sModalTitle">
+
+        <!-- Header -->
+        <div class="s-modal-header">
+            <h3 id="sModalTitle">
+                <i class="fas fa-user-edit"></i> Edit Student Profile
+            </h3>
+            <button class="s-modal-close" onclick="closeStudentModal()" aria-label="Close">✕</button>
+        </div>
+
+        <!-- Body -->
+        <div class="s-modal-body">
+
+            <!-- Photo Upload -->
+            <div class="s-section-title">Profile Photo</div>
+            <div class="photo-upload-zone"
+                 onclick="document.getElementById('photoFileInput').click()"
+                 role="button"
+                 tabindex="0"
+                 title="Click to change photo"
+                 onkeypress="if(event.key==='Enter')document.getElementById('photoFileInput').click()">
+                <div class="photo-preview-wrap">
+                    <img id="modalPhotoPreview" src="sandesh.png" alt="Preview" class="photo-preview">
+                    <span class="photo-change-badge"><i class="fas fa-camera"></i></span>
+                </div>
+                <div class="photo-upload-text">
+                    <strong>Click to Upload / Change Photo</strong>
+                    <span>JPG, PNG or WEBP · Max 5 MB</span>
+                </div>
+            </div>
+            <input type="file" id="photoFileInput" accept="image/*">
+
+            <!-- Basic Info -->
+            <div class="s-section-title">Basic Information</div>
+            <div class="s-form-row">
+                <div class="s-form-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="sInputName" placeholder="e.g. Sandesh Shingankar">
+                </div>
+                <div class="s-form-group">
+                    <label><i class="fas fa-layer-group"></i> Class / Year</label>
+                    <input type="text" id="sInputClass" placeholder="e.g. TY IT — Sem 6">
+                </div>
+            </div>
+            <div class="s-form-row">
+                <div class="s-form-group">
+                    <label><i class="fas fa-id-badge"></i> Roll Number</label>
+                    <input type="text" id="sInputRoll" placeholder="e.g. 70">
+                </div>
+                <div class="s-form-group">
+                    <label><i class="fas fa-phone"></i> Contact Number</label>
+                    <input type="tel" id="sInputContact" placeholder="e.g. 8668916036">
+                </div>
+            </div>
+
+            <!-- Social Profiles -->
+            <div class="s-section-title">Social &amp; Online Profiles</div>
+            <div class="s-form-group">
+                <label><i class="fab fa-linkedin"></i> LinkedIn Profile URL</label>
+                <div class="input-icon-wrap">
+                    <i class="fab fa-linkedin-in"></i>
+                    <input type="url" id="sInputLinkedIn" placeholder="https://linkedin.com/in/username">
+                </div>
+            </div>
+            <div class="s-form-group">
+                <label><i class="fab fa-github"></i> GitHub Profile URL</label>
+                <div class="input-icon-wrap">
+                    <i class="fab fa-github"></i>
+                    <input type="url" id="sInputGitHub" placeholder="https://github.com/username">
+                </div>
+            </div>
+
+        </div><!-- /.s-modal-body -->
+
+        <!-- Footer -->
+        <div class="s-modal-footer">
+            <button class="s-btn-cancel" onclick="closeStudentModal()">Cancel</button>
+            <button class="s-btn-save" onclick="saveStudentProfile()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+
+    </div><!-- /.s-modal -->
+</div>
+
+<!-- Toast -->
+<div class="s-toast" id="sToast">
+    <i class="fas fa-check-circle"></i> Profile updated successfully!
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="footer-top">
+        © Copyright 2026 |
+        <strong>NMIET Institute</strong> |
+        All Rights Reserved |
+        Project Done By: Sandesh, Kiran, Tejas
+    </div>
+    <div class="footer-bottom">
+        <p>Our Team</p>
+        <div class="team-social">
+            <div class="member">
+                <span>Sandesh Shingankar</span>
+                <a href="https://github.com/sandeshshingankar" title="GitHub" aria-label="Sandesh's GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/sandeshs-shingankar/" title="LinkedIn" aria-label="Sandesh's LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+             <div class="member">
+                <span>Kiran Rathod</span>
+                <a href="https://github.com/Kiran-Rathod-R" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/kiranrathod-r/" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="member">
+                <span>Tejas Naiknaware</span>
+                <a href="https://github.com/tejasn369" title="GitHub" aria-label="Tejas GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/tejas-naiknaware/" title="LinkedIn" aria-label="Tejas LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+    <button class="scroll-top" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
+</footer>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="student.js"></script>
+<script src="scroll-to-top.js"></script>
+
+<script>
+/* ─── URL PARAMS — populate profile from faculty-dashboard View button ─── */
+(function () {
+    const p       = new URLSearchParams(window.location.search);
+    const name    = p.get('name')    || '';
+    const roll    = p.get('roll')    || '';
+    const email   = p.get('email')   || '';
+    const div     = p.get('div')     || '';
+    const contact = p.get('contact') || '';
+    const parent  = p.get('parent')  || '';
+
+    /* Only run if we arrived from faculty-dashboard (i.e. params exist) */
+    if (!name && !roll) return;
+
+    const g = id => document.getElementById(id);
+
+    /* ── Profile card fields ── */
+    if (name    && g('studentName'))     g('studentName').textContent    = name;
+    if (roll    && g('studentRoll'))     g('studentRoll').textContent    = roll;
+    if (email   && g('studentEmail'))    g('studentEmail').textContent   = email;
+    if (div     && g('displayClass'))    g('displayClass').textContent   = div;
+    if (contact && g('displayContact'))  g('displayContact').textContent = contact;
+    if (roll    && g('detailRoll'))      g('detailRoll').textContent     = roll;
+
+    /* ── Guardian / parent info in expandable section ── */
+    if (parent) {
+        /* Father field is the first guardian label — update it */
+        const fatherEl = document.querySelector('.guardian-info .detail-grid .detail-item:first-child p');
+        if (fatherEl) fatherEl.textContent = parent;
+    }
+
+    /* ── Contact in guardian section ── */
+    if (contact) {
+        const guardianContact = document.querySelector('.guardian-info .detail-item:nth-child(3) p');
+        if (guardianContact) guardianContact.textContent = contact;
+    }
+
+    /* ── Also seed localStorage so Edit modal shows correct data ── */
+    const SKEY = 'student_profile_v1';
+    const existing = (() => { try { return JSON.parse(localStorage.getItem(SKEY)) || {}; } catch(e){ return {}; } })();
+    /* Only pre-fill if localStorage doesn't already have a saved name for this student */
+    if (!existing.name || existing.roll !== roll) {
+        localStorage.setItem(SKEY, JSON.stringify({
+            name,
+            roll,
+            classYear: div,
+            contact,
+            linkedin: existing.linkedin || '',
+            github:   existing.github   || '',
+            photo:    existing.photo    || ''
+        }));
+    }
+
+    /* ── Update navbar back button to go back to faculty dashboard ── */
+    const backBtn = document.querySelector('.nav-back');
+    if (backBtn) {
+        backBtn.href        = 'javascript:history.back()';
+        backBtn.textContent = '← Back to Dashboard';
+    }
+
+    /* ── Update page title ── */
+    document.title = name + ' — Student Profile';
+})();
+
+/* ─── Document upload (original, kept intact) ─── */
+function openDocumentUpload() {
+    const inp = document.getElementById('documentInput');
+    inp.click();
+    inp.onchange = function () {
+        document.getElementById('documentName').textContent =
+            this.files[0] ? '📎 ' + this.files[0].name : '';
+    };
+}
+
+/* ═══════════════════════════════════════
+   LOCAL STORAGE
+═══════════════════════════════════════ */
+const SKEY = 'student_profile_v1';
+
+function defaultData() {
+    return {
+        name: '', classYear: '', roll: '',
+        contact: '8668916036',
+        linkedin: 'https://www.linkedin.com/in/sandeshs-shingankar/',
+        github:   'https://github.com/sandeshshingankar',
+        photo: ''
+    };
+}
+
+function loadData()      { try { return JSON.parse(localStorage.getItem(SKEY)) || defaultData(); } catch(e) { return defaultData(); } }
+function persistData(d)  { localStorage.setItem(SKEY, JSON.stringify(d)); }
+
+/* ═══════════════════════════════════════
+   PENDING PHOTO (before Save)
+═══════════════════════════════════════ */
+let _pendingPhoto = null;
+
+document.getElementById('photoFileInput').addEventListener('change', function () {
+    const f = this.files[0];
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) { alert('Photo must be under 5 MB.'); this.value = ''; return; }
+    const r = new FileReader();
+    r.onload = e => {
+        _pendingPhoto = e.target.result;
+        document.getElementById('modalPhotoPreview').src = _pendingPhoto;
+    };
+    r.readAsDataURL(f);
+});
+
+/* ═══════════════════════════════════════
+   APPLY DATA → PROFILE CARD
+═══════════════════════════════════════ */
+function applyToCard(d) {
+    const g = id => document.getElementById(id);
+
+    if (d.name)      g('studentName').textContent     = d.name;
+    if (d.roll)      g('studentRoll').textContent     = d.roll;
+    if (d.contact)   g('displayContact').textContent  = d.contact;
+    if (d.classYear) g('displayClass').textContent    = d.classYear;
+    if (d.roll)      g('detailRoll') && (g('detailRoll').textContent = d.roll);
+
+    /* LinkedIn */
+    const liEl = g('displayLinkedIn');
+    if (d.linkedin && liEl) {
+        liEl.href        = d.linkedin;
+        liEl.textContent = d.linkedin.replace(/^https?:\/\//, '');
+    }
+
+    /* GitHub */
+    const ghEl = g('displayGitHub');
+    if (d.github && ghEl) {
+        ghEl.href        = d.github;
+        ghEl.textContent = d.github.replace(/^https?:\/\//, '');
+    }
+
+    /* Photo */
+    if (d.photo) g('profilePhoto').src = d.photo;
+
+    /* Quick-tags */
+    const tc = g('liveTags');
+    tc.innerHTML = '';
+    const any = d.classYear || d.roll || d.contact || d.linkedin || d.github;
+    if (any) {
+        if (d.classYear) tc.innerHTML += `<span class="live-tag class-tag"><i class="fas fa-layer-group"></i>${d.classYear}</span>`;
+        if (d.roll)      tc.innerHTML += `<span class="live-tag roll-tag"><i class="fas fa-id-badge"></i>Roll: ${d.roll}</span>`;
+        if (d.contact)   tc.innerHTML += `<span class="live-tag contact-tag"><i class="fas fa-phone"></i>${d.contact}</span>`;
+        if (d.linkedin)  tc.innerHTML += `<a href="${d.linkedin}" class="live-tag li-tag" target="_blank"><i class="fab fa-linkedin-in"></i>LinkedIn</a>`;
+        if (d.github)    tc.innerHTML += `<a href="${d.github}"   class="live-tag gh-tag" target="_blank"><i class="fab fa-github"></i>GitHub</a>`;
+        tc.style.display = 'flex';
+    } else {
+        tc.style.display = 'none';
+    }
+}
+
+/* ═══════════════════════════════════════
+   MODAL OPEN / CLOSE
+═══════════════════════════════════════ */
+function openStudentModal() {
+    const d = loadData();
+    _pendingPhoto = null;
+
+    document.getElementById('sInputName').value     = d.name;
+    document.getElementById('sInputClass').value    = d.classYear;
+    document.getElementById('sInputRoll').value     = d.roll;
+    document.getElementById('sInputContact').value  = d.contact;
+    document.getElementById('sInputLinkedIn').value = d.linkedin;
+    document.getElementById('sInputGitHub').value   = d.github;
+
+    /* show current photo in preview */
+    document.getElementById('modalPhotoPreview').src =
+        d.photo || document.getElementById('profilePhoto').src;
+
+    document.getElementById('studentModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeStudentModal() {
+    document.getElementById('studentModal').classList.remove('active');
+    document.body.style.overflow = '';
+    _pendingPhoto = null;
+    document.getElementById('photoFileInput').value = '';
+}
+
+function handleModalOverlay(e) {
+    if (e.target === document.getElementById('studentModal')) closeStudentModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStudentModal(); });
+
+/* ═══════════════════════════════════════
+   SAVE
+═══════════════════════════════════════ */
+function saveStudentProfile() {
+    const prev = loadData();
+    const data = {
+        name:      document.getElementById('sInputName').value.trim()     || prev.name,
+        classYear: document.getElementById('sInputClass').value.trim()    || prev.classYear,
+        roll:      document.getElementById('sInputRoll').value.trim()     || prev.roll,
+        contact:   document.getElementById('sInputContact').value.trim()  || prev.contact,
+        linkedin:  document.getElementById('sInputLinkedIn').value.trim() || prev.linkedin,
+        github:    document.getElementById('sInputGitHub').value.trim()   || prev.github,
+        photo:     _pendingPhoto || prev.photo
+    };
+
+    persistData(data);
+    applyToCard(data);
+    closeStudentModal();
+    showToast();
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+function showToast() {
+    const t = document.getElementById('sToast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+/* ═══════════════════════════════════════
+   INIT — restore on page load
+═══════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => applyToCard(loadData()));
+</script>
+
+</body>
+</html>

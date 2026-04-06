@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Clubs – NMIET GFM</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+*{box-sizing:border-box}body{background:#f9f7f2;font-family:'Inter',sans-serif;margin:0}
+.page-hero{background:linear-gradient(135deg,#1a0a00 0%,#4a1c00 40%,#d97706 100%);color:#fff;text-align:center;padding:70px 24px 60px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(251,191,36,.18) 0%,transparent 65%)}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:46px;font-weight:800;margin:0 0 10px;position:relative}
+.page-hero p{font-size:17px;opacity:.88;margin:0;position:relative}
+.cl-container{max-width:1140px;margin:0 auto;padding:44px 20px}
+.cl-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:28px;background:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.cl-search{flex:1;min-width:200px;padding:10px 14px;border:2px solid #fde68a;border-radius:10px;font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.cl-search:focus{border-color:#d97706}
+.cl-filter{padding:10px 14px;border:2px solid #fde68a;border-radius:10px;font-size:14px;background:#fff;cursor:pointer;font-family:'Inter',sans-serif}
+.cl-admin-login-btn{padding:10px 20px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;font-family:'Inter',sans-serif}
+.cl-admin-login-btn:hover{opacity:.88;transform:translateY(-1px)}
+.logged-bar{background:linear-gradient(135deg,#fef3c7,#fff);border:2px solid #fde68a;border-radius:14px;padding:12px 18px;margin-bottom:22px;display:none;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(217,119,6,.12)}
+.logged-bar.show{display:flex}
+.logged-bar span{font-size:14px;font-weight:700;color:#92400e;display:flex;align-items:center;gap:8px}
+.logout-btn{padding:8px 16px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px}
+.cl-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07);transition:all .28s;display:flex;flex-direction:column;border:1px solid #f3f4f6}
+.cl-card:hover{transform:translateY(-7px);box-shadow:0 20px 48px rgba(0,0,0,.13)}
+.cl-card-top{padding:26px 22px 16px;text-align:center}
+.cl-logo-wrap{width:88px;height:88px;border-radius:50%;margin:0 auto 12px;border:3px solid #fde68a;overflow:hidden;cursor:pointer;position:relative;background:#fffbeb;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(217,119,6,.18);transition:border-color .2s}
+.cl-logo-wrap:hover{border-color:#d97706}
+.cl-logo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.cl-logo-fallback{font-size:42px;line-height:1}
+.cl-logo-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.48);border-radius:50%;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-size:10px;font-weight:700;text-align:center;gap:3px}
+.cl-logo-overlay i{font-size:16px}
+.cl-logo-wrap.editable:hover .cl-logo-overlay{display:flex}
+.cl-logo-input{display:none}
+.cl-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#111827;margin-bottom:4px}
+.cl-tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.cl-tag.tech{background:#dbeafe;color:#1e40af}
+.cl-tag.cultural{background:#fce7f3;color:#9d174d}
+.cl-tag.sports{background:#d1fae5;color:#065f46}
+.cl-tag.social{background:#fef3c7;color:#92400e}
+.cl-desc{font-size:13.5px;color:#6b7280;line-height:1.6}
+.cl-card-body{padding:0 22px 14px}
+.cl-info-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#4b5563;margin-bottom:6px}
+.cl-info-row i{color:#d97706;width:14px;text-align:center}
+.cl-card-footer{padding:14px 22px 18px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.cl-join-btn{padding:8px 16px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:'Inter',sans-serif}
+.cl-join-btn.joined{background:#10b981;cursor:default}
+.cl-login-btn-card{padding:8px 16px;background:linear-gradient(135deg,#111827,#374151);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;font-family:'Inter',sans-serif}
+.cl-login-btn-card:hover{background:#000;transform:translateY(-1px)}
+.cl-members{font-size:12px;color:#9ca3af}
+.cl-recruiting{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;animation:pulse-badge 2s ease-in-out infinite}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.4)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+.club-login-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10001;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(6px)}
+.club-login-overlay.active{display:flex}
+.club-login-box{background:#fff;border-radius:22px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 30px 80px rgba(0,0,0,.22);text-align:center;animation:cl-in .28s cubic-bezier(.34,1.3,.64,1);position:relative}
+@keyframes cl-in{from{transform:translateY(24px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.club-login-logo{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;border:3px solid #fde68a;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fffbeb;font-size:36px}
+.club-login-logo img{width:100%;height:100%;object-fit:cover}
+.club-login-box h3{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin:0 0 4px}
+.club-login-box p{font-size:14px;color:#6b7280;margin-bottom:20px}
+.role-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.role-pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:#f3f4f6;color:#374151;cursor:pointer;border:2px solid transparent;transition:all .18s;font-family:'Inter',sans-serif}
+.role-pill.active{background:#fef3c7;border-color:#d97706;color:#92400e}
+.club-login-input{width:100%;padding:11px 14px;border:1.5px solid #d1d5db;border-radius:10px;font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box;font-family:'Inter',sans-serif;transition:border-color .2s}
+.club-login-input:focus{border-color:#d97706}
+.club-login-submit{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;font-family:'Inter',sans-serif;transition:opacity .2s}
+.club-login-submit:hover{opacity:.88}
+.cl-err{color:#dc2626;font-size:13px;margin-bottom:8px;min-height:20px}
+.cl-login-demo{font-size:11.5px;color:#9ca3af;margin-top:12px;background:#f9fafb;padding:8px 12px;border-radius:8px}
+.cl-login-close-btn{position:absolute;top:14px;right:14px;background:#f3f4f6;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:#6b7280}
+.cl-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(4px)}
+.cl-overlay.active{display:flex}
+.cl-modal{background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:cl-in .25s ease}
+.cl-mhead{padding:18px 22px 14px;border-bottom:1.5px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:20px 20px 0 0}
+.cl-mhead h3{margin:0;font-size:17px;font-weight:700;font-family:'Syne',sans-serif}
+.cl-mclose{background:#f3f4f6;border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;color:#6b7280}
+.cl-mclose:hover{background:#fee2e2;color:#dc2626}
+.cl-mbody{padding:20px 22px}
+.cl-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.cl-fg label{font-size:13px;font-weight:600;color:#374151}
+.cl-fg input,.cl-fg textarea,.cl-fg select{padding:10px 12px;border:1.5px solid #d1d5db;border-radius:9px;font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.cl-fg input:focus,.cl-fg textarea:focus,.cl-fg select:focus{border-color:#d97706}
+.cl-fg textarea{resize:vertical;min-height:85px}
+.cl-mfoot{padding:14px 22px 18px;border-top:1.5px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px}
+.cl-cancel{padding:10px 18px;border:1.5px solid #d1d5db;border-radius:9px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.cl-submit{padding:10px 22px;border:none;border-radius:9px;background:linear-gradient(135deg,#d97706,#b45309);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.cl-ctrl-btn{padding:7px 14px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;transition:all .18s}
+.cl-ctrl-btn.recruit{background:#d1fae5;color:#065f46}
+.cl-ctrl-btn.recruit:hover{background:#a7f3d0}
+.cl-ctrl-btn.logout-club{background:#fee2e2;color:#dc2626}
+.cl-ctrl-btn.logout-club:hover{background:#fecaca}
+.cl-admin-bar{background:linear-gradient(135deg,#1a0a00,#4a1c00);border-radius:14px;padding:14px 20px;margin-bottom:22px;display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.cl-admin-bar.show{display:flex}
+.cl-admin-bar span{color:#fbbf24;font-size:14px;font-weight:700}
+.cl-toast{position:fixed;bottom:28px;right:28px;background:#1a0a00;color:#fbbf24;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:99999;transform:translateY(20px);opacity:0;transition:all .35s cubic-bezier(.34,1.3,.64,1);max-width:340px;border-left:4px solid #d97706}
+.cl-toast.show{transform:translateY(0);opacity:1}
+.cl-section-header{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#111827;margin:0 0 20px;display:flex;align-items:center;gap:10px}
+.cl-section-header span{color:#d97706}
+.cl-recruit-feed{margin-bottom:36px}
+.recruit-card{background:#fff;border-radius:14px;padding:18px 22px;margin-bottom:12px;border-left:4px solid #10b981;box-shadow:0 3px 12px rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:14px}
+.recruit-card-logo{width:44px;height:44px;border-radius:50%;flex-shrink:0;border:2px solid #fde68a;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fffbeb;font-size:20px}
+.recruit-card-logo img{width:100%;height:100%;object-fit:cover}
+.recruit-card-body{flex:1;min-width:0}
+.recruit-card-title{font-size:15px;font-weight:700;color:#111827;margin-bottom:3px}
+.recruit-card-meta{font-size:12.5px;color:#6b7280;margin-bottom:6px}
+.recruit-card-desc{font-size:13.5px;color:#374151;line-height:1.6}
+.recruit-card-time{font-size:11.5px;color:#9ca3af;margin-top:6px}
+.recruit-new-badge{background:#10b981;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;margin-left:6px}
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">College Clubs</h1>
+        <div></div>
+    </div>
+</nav>
+<div class="page-hero">
+    <h1>🏆 College Clubs</h1>
+    <p>Explore and manage college clubs — Technical, Cultural, Sports &amp; Social</p>
+</div>
+<div class="cl-container">
+    <div id="adminBar" class="cl-admin-bar">
+        <span>🔐 Clubs System Admin — Full control enabled</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="cl-ctrl-btn recruit" onclick="openAddModal()"><i class="fas fa-plus"></i> Add Club</button>
+            <button class="cl-ctrl-btn logout-club" onclick="doAdminLogout()"><i class="fas fa-sign-out-alt"></i> Logout Admin</button>
+        </div>
+    </div>
+    <div class="cl-toolbar">
+        <input class="cl-search" id="clSearch" type="text" placeholder="Search clubs...">
+        <select class="cl-filter" id="clFilter">
+            <option value="all">All Categories</option>
+            <option value="tech">Technical</option>
+            <option value="cultural">Cultural</option>
+            <option value="sports">Sports</option>
+            <option value="social">Social</option>
+        </select>
+        <button class="cl-admin-login-btn" id="adminLoginBtn" onclick="openAdminLogin()">
+            <i class="fas fa-user-shield"></i> Admin Login
+        </button>
+    </div>
+    <div id="recruitFeed" class="cl-recruit-feed" style="display:none">
+        <div class="cl-section-header">🟢 Open <span>Recruitment</span></div>
+        <div id="recruitList"></div>
+    </div>
+    <div class="cl-grid" id="clGrid"></div>
+</div>
+
+<!-- Club Login -->
+<div class="club-login-overlay" id="clubLoginOverlay" onclick="if(event.target===this)closeClubLogin()">
+    <div class="club-login-box">
+        <button class="cl-login-close-btn" onclick="closeClubLogin()">✕</button>
+        <div class="club-login-logo" id="clubLoginLogo">🏅</div>
+        <h3 id="clubLoginTitle">Club Login</h3>
+        <p id="clubLoginSub">Sign in as a club member</p>
+        <div class="role-pills" id="rolePills"></div>
+        <input class="club-login-input" type="email" id="clubEmail" placeholder="Enter your email">
+        <input class="club-login-input" type="password" id="clubPassword" placeholder="Password">
+        <div class="cl-err" id="clubErr"></div>
+        <button class="club-login-submit" onclick="doClubLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div class="cl-login-demo" id="clubDemoHint"></div>
+    </div>
+</div>
+
+<!-- Admin Login -->
+<div class="club-login-overlay" id="adminLoginOverlay" onclick="if(event.target===this)closeAdminLogin()">
+    <div class="club-login-box">
+        <button class="cl-login-close-btn" onclick="closeAdminLogin()">✕</button>
+        <div class="club-login-logo">🛡️</div>
+        <h3>System Admin Login</h3>
+        <p>Manage all clubs and settings</p>
+        <input class="club-login-input" type="email" id="adminEmail" placeholder="admin@nmiet.edu.in">
+        <input class="club-login-input" type="password" id="adminPass" placeholder="Password">
+        <div class="cl-err" id="adminErr"></div>
+        <button class="club-login-submit" onclick="doAdminLogin()"><i class="fas fa-user-shield"></i> Admin Login</button>
+        <div class="cl-login-demo">Demo: admin@nmiet.edu.in / admin123</div>
+    </div>
+</div>
+
+<!-- Recruitment Modal -->
+<div class="cl-overlay" id="recruitModal" onclick="if(event.target===this)closeRecruitModal()">
+    <div class="cl-modal">
+        <div class="cl-mhead">
+            <h3><i class="fas fa-bullhorn" style="color:#10b981;margin-right:8px;"></i>Post Recruitment Notice</h3>
+            <button class="cl-mclose" onclick="closeRecruitModal()">✕</button>
+        </div>
+        <div class="cl-mbody">
+            <div class="cl-fg"><label>Recruitment Title</label><input id="rTitle" placeholder="e.g. Accepting new members for 2026-27"></div>
+            <div class="cl-fg"><label>Description / Requirements</label><textarea id="rDesc" placeholder="Skills, eligibility, requirements..."></textarea></div>
+            <div class="cl-fg"><label>Last Date to Apply</label><input type="date" id="rDeadline"></div>
+            <div class="cl-fg"><label>Contact / How to Apply</label><input id="rContact" placeholder="e.g. Form link or email"></div>
+        </div>
+        <div class="cl-mfoot">
+            <button class="cl-cancel" onclick="closeRecruitModal()">Cancel</button>
+            <button class="cl-submit" onclick="postRecruitment()">Post Notice</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Club Modal -->
+<div class="cl-overlay" id="clModal" onclick="if(event.target===this)closeModal()">
+    <div class="cl-modal">
+        <div class="cl-mhead">
+            <h3><i class="fas fa-plus-circle" style="color:#d97706;margin-right:8px;"></i>Add New Club</h3>
+            <button class="cl-mclose" onclick="closeModal()">✕</button>
+        </div>
+        <div class="cl-mbody">
+            <div class="cl-fg"><label>Club Name</label><input id="cName" placeholder="e.g. CodeBits Club"></div>
+            <div class="cl-fg"><label>Category</label>
+                <select id="cCat"><option value="tech">Technical</option><option value="cultural">Cultural</option><option value="sports">Sports</option><option value="social">Social</option></select>
+            </div>
+            <div class="cl-fg"><label>Description</label><textarea id="cDesc" placeholder="What does this club do?"></textarea></div>
+            <div class="cl-fg"><label>Emoji Icon</label><input id="cEmoji" placeholder="e.g. 💻" maxlength="4"></div>
+            <div class="cl-fg"><label>Coordinator</label><input id="cCoord" placeholder="Faculty coordinator name"></div>
+            <div class="cl-fg"><label>Meeting Schedule</label><input id="cSchedule" placeholder="e.g. Every Friday 4PM"></div>
+            <div class="cl-fg"><label>President Name</label><input id="cPres" placeholder="Student president name"></div>
+            <div class="cl-fg"><label>President Email</label><input id="cPresEmail" placeholder="president@nmiet.edu.in"></div>
+        </div>
+        <div class="cl-mfoot">
+            <button class="cl-cancel" onclick="closeModal()">Cancel</button>
+            <button class="cl-submit" onclick="addClub()">Add Club</button>
+        </div>
+    </div>
+</div>
+
+<div class="cl-toast" id="clToast"></div>
+<footer class="footer"><div class="footer-top">© Copyright 2026 | <strong>NMIET Institute</strong> | All Rights Reserved | Project Done By: Sandesh, Kiran, Tejas</div></footer>
+<script src="scroll-to-top.js"></script>
+<script>
+const CL_KEY='gfm_clubs_v2',REC_KEY='gfm_club_recruit',MEM_KEY='gfm_club_members',LOGO_KEY='gfm_club_logos';
+const ADMIN_CRED={email:'admin@nmiet.edu.in',password:'admin123'};
+const DEFAULTS=[
+  {id:1,name:'IIC',cat:'tech',emoji:'💻',desc:'Competitive programming, hackathons, DSA practice and open-source contributions.',coord:'Prof. Vivek Nagargoje',schedule:'Every Friday 5PM',members:87,members_list:[{role:'President',name:'Sandesh Shingankar',email:'arjun.codebits@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Priya Shah',email:'priya.codebits@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. Nagargoje',email:'vivek.nagargoje@nmiet.edu.in',pass:'teach123'},{role:'Secretary',name:'Riya Patil',email:'riya.codebits@nmiet.edu.in',pass:'sec123'}]},
+  {id:2,name:'SAIT',cat:'tech',emoji:'🤖',desc:'Build and program robots, IoT devices, and embedded systems.',coord:'Prof. Dheeraj Patil',schedule:'Saturday 10AM',members:54,members_list:[{role:'President',name:'Sahil Joshi',email:'sahil.robo@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Ananya Rao',email:'ananya.robo@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. D. Patil',email:'dheeraj.patil@nmiet.edu.in',pass:'teach123'}]},
+  {id:3,name:'Cultural Ensemble',cat:'cultural',emoji:'🎭',desc:'Classical and western music, dance, drama and street plays.',coord:'Prof. Hemlata Mane',schedule:'Wednesday 4PM',members:120,members_list:[{role:'President',name:'Kavya Desai',email:'kavya.cultural@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Rohan Ghosh',email:'rohan.cultural@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. H. Mane',email:'hemlata.mane@nmiet.edu.in',pass:'teach123'}]},
+  {id:4,name:'NSS',cat:'cultural',emoji:'🎤',desc:'Hone public speaking, debate, MUN, and journalism skills.',coord:'Prof. Bharti Dhote',schedule:'Tuesday 5PM',members:45,members_list:[{role:'President',name:'Nikhil Sharma',email:'nikhil.debate@nmiet.edu.in',pass:'pres123'},{role:'Teacher',name:'Prof. B. Dhote',email:'bharti.dhote@nmiet.edu.in',pass:'teach123'}]},
+  {id:5,name:'ASCS',cat:'sports',emoji:'⚽',desc:'Organises cricket, football, badminton and kabaddi teams.',coord:'Prof. Ajay Sonawane',schedule:'Daily 7AM',members:200,members_list:[{role:'President',name:'Siddharth More',email:'sid.sports@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Neha Kulkarni',email:'neha.sports@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. A. Sonawane',email:'ajay.sonawane@nmiet.edu.in',pass:'teach123'}]},
+  {id:6,name:'SAAI',cat:'social',emoji:'🌱',desc:'Environment sustainability drives, tree plantation, waste management.',coord:'Dr. Nitin Dhawas',schedule:'1st Saturday 9AM',members:62,members_list:[{role:'President',name:'Tanvi Joshi',email:'tanvi.green@nmiet.edu.in',pass:'pres123'},{role:'Teacher',name:'Dr. N. Dhawas',email:'nitin.dhawas@nmiet.edu.in',pass:'teach123'}]},
+  {id:7,name:'Entrepreneurship Cell',cat:'social',emoji:'🚀',desc:'Startup ideation, mentorship sessions, investor meets, and product hackathons.',coord:'Prof. Roshni Narkhede',schedule:'Thursday 4PM',members:78,members_list:[{role:'President',name:'Aditya Pandit',email:'adi.ecell@nmiet.edu.in',pass:'pres123'},{role:'Vice President',name:'Sneha Wagh',email:'sneha.ecell@nmiet.edu.in',pass:'vp123'},{role:'Teacher',name:'Prof. R. Narkhede',email:'roshni.narkhede@nmiet.edu.in',pass:'teach123'}]},
+];
+let isAdmin=false,activeClubId=null,activeClubRole=null,pendingClubId=null;
+function load(){try{return JSON.parse(localStorage.getItem(CL_KEY))||DEFAULTS}catch(e){return DEFAULTS}}
+function loadRec(){try{return JSON.parse(localStorage.getItem(REC_KEY))||[]}catch(e){return[]}}
+function loadMem(){try{return JSON.parse(localStorage.getItem(MEM_KEY))||[]}catch(e){return[]}}
+function loadLogos(){try{return JSON.parse(localStorage.getItem(LOGO_KEY))||{}}catch(e){return{}}}
+function save(d){localStorage.setItem(CL_KEY,JSON.stringify(d))}
+function saveRec(r){localStorage.setItem(REC_KEY,JSON.stringify(r))}
+function saveLogos(l){localStorage.setItem(LOGO_KEY,JSON.stringify(l))}
+const LABELS={tech:'Technical',cultural:'Cultural',sports:'Sports',social:'Social'};
+
+function render(){
+  const q=(document.getElementById('clSearch').value||'').toLowerCase();
+  const flt=document.getElementById('clFilter').value;
+  const mem=loadMem(),logos=loadLogos();
+  const items=load().filter(c=>{
+    if(flt!=='all'&&c.cat!==flt)return false;
+    return!q||c.name.toLowerCase().includes(q)||c.desc.toLowerCase().includes(q);
+  });
+  const grid=document.getElementById('clGrid');
+  if(!items.length){grid.innerHTML='<div style="text-align:center;padding:60px;color:#9ca3af;font-size:16px;grid-column:1/-1;">No clubs found.</div>';return}
+  grid.innerHTML=items.map(c=>{
+    const isLoggedIn=false;
+    const logoSrc=logos[c.id];
+    const logoHtml=logoSrc?`<img src="${logoSrc}" alt="${c.name}">`:`<span class="cl-logo-fallback">${c.emoji||'🏅'}</span>`;
+    const canEdit=isAdmin;
+    const recs=loadRec().filter(r=>r.clubId===c.id&&!r.expired);
+    const recruitBadge=recs.length?`<div class="cl-recruiting"><i class="fas fa-bullhorn"></i> Recruiting!</div>`:'';
+    const footerLeft=`<span class="cl-members"><i class="fas fa-users" style="color:#d97706;margin-right:4px;"></i>${c.members} members</span>`;
+    let footerRight;
+    // Always show Club Login button only (no Join Club)
+    footerRight=`<button class="cl-login-btn-card" onclick="openClubLogin(${c.id})"><i class="fas fa-lock"></i> Club Login</button>`;
+    return`<div class="cl-card" id="card-${c.id}">
+      <div class="cl-card-top">
+        <div class="cl-logo-wrap ${canEdit?'editable':''}" onclick="${canEdit?`triggerLogoUpload(${c.id})`:''}">
+          ${logoHtml}${canEdit?`<div class="cl-logo-overlay"><i class="fas fa-camera"></i>Change</div>`:''}
+        </div>
+        <input type="file" accept="image/*" class="cl-logo-input" id="logo-input-${c.id}" onchange="handleLogoChange(event,${c.id})">
+        ${recruitBadge}
+        <div class="cl-name">${c.name}</div>
+        <span class="cl-tag ${c.cat}">${LABELS[c.cat]||c.cat}</span>
+        <div class="cl-desc">${c.desc}</div>
+      </div>
+      <div class="cl-card-body">
+        <div class="cl-info-row"><i class="fas fa-user-tie"></i>${c.coord}</div>
+        <div class="cl-info-row"><i class="fas fa-clock"></i>${c.schedule}</div>
+        <div class="cl-info-row"><i class="fas fa-users"></i>${c.members} members</div>
+
+      </div>
+      <div class="cl-card-footer">${footerLeft}${footerRight}</div>
+    </div>`;
+  }).join('');
+  renderRecruitFeed();
+}
+
+function renderRecruitFeed(){
+  const recs=loadRec().filter(r=>!r.expired),logos=loadLogos(),clubs=load();
+  const feed=document.getElementById('recruitFeed'),list=document.getElementById('recruitList');
+  if(!recs.length){feed.style.display='none';return}
+  feed.style.display='block';
+  list.innerHTML=recs.map(r=>{
+    const club=clubs.find(c=>c.id===r.clubId)||{};
+    const logoSrc=logos[r.clubId];
+    const logoHtml=logoSrc?`<img src="${logoSrc}" alt="">`:`<span>${club.emoji||'🏅'}</span>`;
+    const isNew=(Date.now()-r.ts)<86400000;
+    return`<div class="recruit-card"><div class="recruit-card-logo">${logoHtml}</div><div class="recruit-card-body"><div class="recruit-card-title">${club.name||'Club'} — ${r.title}${isNew?`<span class="recruit-new-badge">NEW</span>`:''}</div><div class="recruit-card-meta"><i class="fas fa-clock" style="color:#d97706;margin-right:4px;"></i>Deadline: ${r.deadline||'Open'}</div><div class="recruit-card-desc">${r.desc}</div>${r.contact?`<div class="recruit-card-time"><i class="fas fa-link" style="color:#6b7280;margin-right:4px;"></i>${r.contact}</div>`:''}<div class="recruit-card-time">Posted ${new Date(r.ts).toLocaleString()}</div></div></div>`;
+  }).join('');
+}
+
+function joinClub(id){
+  const items=load(),club=items.find(c=>c.id===id);if(!club)return;
+  club.members++;save(items);
+  const mem=loadMem();if(!mem.includes(id)){mem.push(id);localStorage.setItem(MEM_KEY,JSON.stringify(mem))}
+  render();showToast(`🎉 You joined ${club.name}!`);
+}
+
+function openClubLogin(clubId){
+  pendingClubId=clubId;
+  const clubs=load(),club=clubs.find(c=>c.id===clubId);if(!club)return;
+  const logos=loadLogos();
+  document.getElementById('clubLoginTitle').textContent=club.name+' Login';
+  document.getElementById('clubLoginSub').textContent='Choose your role and sign in';
+  document.getElementById('clubErr').textContent='';
+  document.getElementById('clubEmail').value='';
+  document.getElementById('clubPassword').value='';
+  const pillsContainer=document.getElementById('rolePills');
+  const roles=[...new Set((club.members_list||[]).map(m=>m.role))];
+  pillsContainer.innerHTML=roles.map((r,i)=>`<div class="role-pill${i===0?' active':''}" onclick="selectRolePill(this)">${r}</div>`).join('');
+  const logoSrc=logos[clubId];
+  const lg=document.getElementById('clubLoginLogo');
+  lg.innerHTML=logoSrc?`<img src="${logoSrc}" alt="">`:(club.emoji||'🏅');
+  const member=(club.members_list||[]).find(m=>m.role===roles[0]);
+  document.getElementById('clubDemoHint').innerHTML=member?`Demo ${roles[0]}: ${member.email} / ${member.pass}`:'';
+  document.getElementById('clubLoginOverlay').classList.add('active');
+}
+function closeClubLogin(){document.getElementById('clubLoginOverlay').classList.remove('active')}
+
+function selectRolePill(el){
+  document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  if(!pendingClubId)return;
+  const clubs=load(),club=clubs.find(c=>c.id===pendingClubId);
+  const member=(club?.members_list||[]).find(m=>m.role===el.textContent.trim());
+  document.getElementById('clubDemoHint').innerHTML=member?`Demo ${el.textContent}: ${member.email} / ${member.pass}`:'';
+}
+
+function doClubLogin(){
+  const email=document.getElementById('clubEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('clubPassword').value;
+  const rolePill=document.querySelector('.role-pill.active');
+  const role=rolePill?rolePill.textContent.trim():'';
+  const clubs=load(),club=clubs.find(c=>c.id===pendingClubId);if(!club)return;
+  const member=(club.members_list||[]).find(m=>m.email.toLowerCase()===email&&m.pass===pass&&m.role===role);
+  if(member){
+    // Save club session and redirect to dashboard
+    sessionStorage.setItem('clubSession', JSON.stringify({clubId:pendingClubId, role:member.role, user:member.name}));
+    closeClubLogin();
+    window.location.href='club-dashboard.html';
+  }
+  else{document.getElementById('clubErr').textContent='Invalid credentials or role mismatch.';}
+}
+
+function doClubLogout(){
+  const clubs=load(),club=clubs.find(c=>c.id===activeClubId);
+  const name=club?club.name:'Club';activeClubId=null;activeClubRole=null;render();showToast(`👋 Logged out from ${name}`);
+}
+
+function openAdminLogin(){document.getElementById('adminLoginOverlay').classList.add('active');document.getElementById('adminErr').textContent=''}
+function closeAdminLogin(){document.getElementById('adminLoginOverlay').classList.remove('active')}
+function doAdminLogin(){
+  const e=document.getElementById('adminEmail').value.trim(),p=document.getElementById('adminPass').value;
+  if(e===ADMIN_CRED.email&&p===ADMIN_CRED.password){
+    isAdmin=true;closeAdminLogin();
+    document.getElementById('adminLoginBtn').style.display='none';
+    document.getElementById('adminBar').classList.add('show');
+    render();showToast('🛡️ Admin logged in successfully');
+  }else{document.getElementById('adminErr').textContent='Invalid admin credentials.';}
+}
+function doAdminLogout(){
+  isAdmin=false;document.getElementById('adminLoginBtn').style.display='flex';document.getElementById('adminBar').classList.remove('show');render();showToast('👋 Admin logged out');
+}
+
+function triggerLogoUpload(clubId){document.getElementById(`logo-input-${clubId}`)?.click()}
+function handleLogoChange(event,clubId){
+  const file=event.target.files?.[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){const logos=loadLogos();logos[clubId]=e.target.result;saveLogos(logos);render();showToast('🖼️ Club logo updated!')};
+  reader.readAsDataURL(file);
+}
+
+let recruitingClubId=null;
+function openRecruitModal(clubId){recruitingClubId=clubId;document.getElementById('rDeadline').value='';document.getElementById('recruitModal').classList.add('active')}
+function closeRecruitModal(){document.getElementById('recruitModal').classList.remove('active')}
+function postRecruitment(){
+  const title=document.getElementById('rTitle').value.trim(),desc=document.getElementById('rDesc').value.trim();
+  if(!title||!desc){alert('Title and description are required.');return}
+  const recs=loadRec();
+  recs.unshift({id:Date.now(),clubId:recruitingClubId,title,desc,deadline:document.getElementById('rDeadline').value,contact:document.getElementById('rContact').value.trim(),ts:Date.now(),expired:false});
+  saveRec(recs);closeRecruitModal();render();showToast('📢 Recruitment notice posted!');
+  localStorage.setItem('gfm_recruit_ping',Date.now().toString());
+}
+
+function openAddModal(){document.getElementById('clModal').classList.add('active')}
+function closeModal(){document.getElementById('clModal').classList.remove('active')}
+function addClub(){
+  const name=document.getElementById('cName').value.trim(),desc=document.getElementById('cDesc').value.trim();
+  if(!name||!desc){alert('Name and description are required.');return}
+  const items=load(),presName=document.getElementById('cPres').value.trim(),presEmail=document.getElementById('cPresEmail').value.trim();
+  items.unshift({id:Date.now(),name,cat:document.getElementById('cCat').value,emoji:document.getElementById('cEmoji').value||'🏅',desc,coord:document.getElementById('cCoord').value.trim()||'TBD',schedule:document.getElementById('cSchedule').value.trim()||'TBD',members:0,members_list:presName?[{role:'President',name:presName,email:presEmail,pass:'pres123'}]:[]});
+  save(items);closeModal();render();showToast(`✅ ${name} added!`);
+}
+
+function showToast(msg){const t=document.getElementById('clToast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
+
+window.addEventListener('storage',function(e){if([CL_KEY,REC_KEY,'gfm_recruit_ping'].includes(e.key))render()});
+document.getElementById('clSearch').addEventListener('input',render);
+document.getElementById('clFilter').addEventListener('change',render);
+document.addEventListener('DOMContentLoaded',render);
+</script>
+</body>
+</html>

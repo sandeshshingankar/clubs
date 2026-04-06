@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unofficial Updates – NMIET GFM</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg,#fdf2f8 0%,#fce7f3 50%,#fbcfe8 100%); }
+
+        .page-hero {
+            background: linear-gradient(135deg,#be185d,#ec4899);
+            color: #fff; text-align: center; padding: 60px 24px;
+        }
+        .page-hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; }
+        .page-hero p  { font-size: 18px; opacity: .9; margin: 0; }
+        .disclaimer-banner {
+            background: #fff7ed; border-left: 5px solid #f59e0b;
+            padding: 14px 22px; border-radius: 0 10px 10px 0;
+            font-size: 13px; color: #92400e; display: flex; align-items: center; gap: 10px;
+            max-width: 960px; margin: 24px auto 0; border-radius: 10px;
+        }
+        .uu-container { max-width: 960px; margin: 0 auto; padding: 32px 20px 56px; }
+
+        /* Toolbar */
+        .uu-toolbar {
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+            margin-bottom: 28px; background: #fff;
+            padding: 16px 20px; border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.08);
+        }
+        .uu-search {
+            flex: 1; min-width: 180px; padding: 10px 14px;
+            border: 2px solid #fbcfe8; border-radius: 9px; font-size: 14px; outline: none;
+            transition: border-color .2s;
+        }
+        .uu-search:focus { border-color: #ec4899; }
+        .uu-filter {
+            padding: 10px 14px; border: 2px solid #fbcfe8; border-radius: 9px;
+            font-size: 14px; background: #fff; cursor: pointer; outline: none;
+        }
+        .uu-sort { padding: 10px 14px; border: 2px solid #fbcfe8; border-radius: 9px; font-size: 14px; background: #fff; cursor: pointer; outline: none; }
+        .uu-post-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg,#ec4899,#be185d);
+            color: #fff; border: none; border-radius: 9px;
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: opacity .2s;
+        }
+        .uu-post-btn:hover { opacity: .88; }
+
+        /* Stats */
+        .uu-stats { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+        .uu-stat {
+            background: #fff; border-radius: 12px; padding: 14px 20px;
+            flex: 1; min-width: 130px; box-shadow: 0 2px 10px rgba(0,0,0,.07);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .uu-stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .uu-stat-val  { font-size: 22px; font-weight: 800; color: #111827; line-height: 1; }
+        .uu-stat-lbl  { font-size: 12px; color: #6b7280; font-weight: 600; }
+
+        /* Feed */
+        .uu-feed { display: flex; flex-direction: column; gap: 18px; }
+
+        .uu-post {
+            background: #fff; border-radius: 16px;
+            padding: 20px 22px; box-shadow: 0 3px 12px rgba(0,0,0,.07);
+            border: 2px solid transparent; transition: all .25s;
+        }
+        .uu-post:hover { border-color: #fbcfe8; box-shadow: 0 8px 24px rgba(0,0,0,.11); }
+        .uu-post-top {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 12px; margin-bottom: 10px;
+        }
+        .uu-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg,#ec4899,#be185d);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 800; font-size: 15px; flex-shrink: 0;
+        }
+        .uu-author-block { flex: 1; }
+        .uu-author  { font-size: 14px; font-weight: 700; color: #111827; }
+        .uu-time    { font-size: 12px; color: #9ca3af; }
+        .uu-tag-badge {
+            font-size: 11px; font-weight: 700; padding: 3px 12px;
+            border-radius: 20px; white-space: nowrap;
+        }
+        .uu-tag-badge.rumour   { background: #fee2e2; color: #dc2626; }
+        .uu-tag-badge.tip      { background: #d1fae5; color: #065f46; }
+        .uu-tag-badge.funny    { background: #fef3c7; color: #92400e; }
+        .uu-tag-badge.alert    { background: #ede9fe; color: #5b21b6; }
+        .uu-tag-badge.general  { background: #fce7f3; color: #9d174d; }
+
+        .uu-body { font-size: 14.5px; color: #374151; line-height: 1.7; margin-bottom: 14px; }
+
+        .uu-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+        .uu-action-btn {
+            background: none; border: none; cursor: pointer;
+            font-size: 13px; font-weight: 600; color: #6b7280;
+            display: flex; align-items: center; gap: 5px; padding: 5px 8px;
+            border-radius: 8px; transition: background .15s, color .15s;
+        }
+        .uu-action-btn:hover       { background: #fce7f3; color: #ec4899; }
+        .uu-action-btn.liked       { color: #ec4899; }
+        .uu-action-btn.disliked    { color: #6b7280; }
+
+        /* Comments */
+        .uu-comments { margin-top: 14px; border-top: 1.5px solid #f3f4f6; padding-top: 12px; }
+        .uu-comment  { display: flex; gap: 10px; margin-bottom: 10px; }
+        .uu-comment-avatar {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #fbcfe8; display: flex; align-items: center;
+            justify-content: center; font-size: 11px; font-weight: 800;
+            color: #be185d; flex-shrink: 0;
+        }
+        .uu-comment-body { background: #f9fafb; border-radius: 10px; padding: 8px 12px; flex: 1; }
+        .uu-comment-author { font-size: 12px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+        .uu-comment-text   { font-size: 13px; color: #374151; }
+        .uu-comment-input-row { display: flex; gap: 8px; margin-top: 10px; }
+        .uu-comment-input {
+            flex: 1; padding: 8px 12px; border: 1.5px solid #fbcfe8;
+            border-radius: 9px; font-size: 13px; outline: none; font-family: inherit;
+        }
+        .uu-comment-input:focus { border-color: #ec4899; }
+        .uu-comment-submit {
+            padding: 8px 14px; background: #ec4899; color: #fff;
+            border: none; border-radius: 9px; font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: opacity .2s;
+        }
+        .uu-comment-submit:hover { opacity: .85; }
+
+        /* Modal */
+        .uu-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.5); z-index: 9999;
+            justify-content: center; align-items: center;
+            padding: 16px; backdrop-filter: blur(4px);
+        }
+        .uu-overlay.active { display: flex; }
+        .uu-modal {
+            background: #fff; border-radius: 18px;
+            width: 100%; max-width: 540px; max-height: 92vh;
+            overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,.2);
+            animation: uu-in .25s ease;
+        }
+        @keyframes uu-in { from{transform:translateY(20px) scale(.97);opacity:0} to{transform:none;opacity:1} }
+        .uu-mhead {
+            padding: 18px 22px 14px; border-bottom: 1.5px solid #f3f4f6;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: #fff; border-radius: 18px 18px 0 0;
+        }
+        .uu-mhead h3 { margin: 0; font-size: 17px; font-weight: 700; }
+        .uu-mclose {
+            background: #f3f4f6; border: none; border-radius: 8px;
+            width: 32px; height: 32px; cursor: pointer; font-size: 17px;
+            display: flex; align-items: center; justify-content: center; color: #6b7280;
+        }
+        .uu-mclose:hover { background: #fee2e2; color: #dc2626; }
+        .uu-mbody { padding: 20px 22px; }
+        .uu-fg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
+        .uu-fg label { font-size: 13px; font-weight: 600; color: #374151; }
+        .uu-fg input,.uu-fg textarea,.uu-fg select {
+            padding: 10px 12px; border: 1.5px solid #d1d5db;
+            border-radius: 8px; font-size: 14px; outline: none; font-family: inherit;
+        }
+        .uu-fg input:focus,.uu-fg textarea:focus,.uu-fg select:focus { border-color: #ec4899; }
+        .uu-fg textarea { resize: vertical; min-height: 90px; }
+        .uu-mfoot {
+            padding: 14px 22px 18px; border-top: 1.5px solid #f3f4f6;
+            display: flex; justify-content: flex-end; gap: 10px;
+        }
+        .uu-cancel { padding: 10px 18px; border: 1.5px solid #d1d5db; border-radius: 8px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .uu-submit { padding: 10px 22px; border: none; border-radius: 8px; background: linear-gradient(135deg,#ec4899,#be185d); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; }
+        .uu-empty { text-align: center; padding: 60px; color: #9ca3af; font-size: 16px; }
+        .uu-anon-note { font-size: 12px; color: #9ca3af; margin-top: 6px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="nav-back">← Back to Home</a>
+        <h1 class="nav-title">Unofficial Updates</h1>
+        <div></div>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <h1>💬 Unofficial Updates</h1>
+    <p>The campus grapevine — student buzz, tips, rumours & community chatter</p>
+</div>
+
+<div class="uu-container">
+
+    <div class="disclaimer-banner">
+        <i class="fas fa-exclamation-triangle" style="font-size:18px;flex-shrink:0;"></i>
+        <span><strong>Disclaimer:</strong> Posts here are user-submitted and <strong>not verified</strong> by NMIET administration. Treat all content as unofficial. For confirmed information, check the <a href="notices.html" style="color:#b45309;font-weight:700;">Important Notices</a> page.</span>
+    </div>
+
+    <div style="height:24px;"></div>
+
+    <!-- Stats -->
+    <div class="uu-stats" id="uuStats">
+        <div class="uu-stat"><div class="uu-stat-icon" style="background:#fce7f3;">💬</div><div><div class="uu-stat-val" id="cntPosts">0</div><div class="uu-stat-lbl">Posts</div></div></div>
+        <div class="uu-stat"><div class="uu-stat-icon" style="background:#d1fae5;">❤️</div><div><div class="uu-stat-val" id="cntLikes">0</div><div class="uu-stat-lbl">Total Likes</div></div></div>
+        <div class="uu-stat"><div class="uu-stat-icon" style="background:#dbeafe;">💭</div><div><div class="uu-stat-val" id="cntComments">0</div><div class="uu-stat-lbl">Comments</div></div></div>
+        <div class="uu-stat"><div class="uu-stat-icon" style="background:#fef3c7;">🔥</div><div><div class="uu-stat-val" id="cntTrending">0</div><div class="uu-stat-lbl">Trending (10+ likes)</div></div></div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="uu-toolbar">
+        <input class="uu-search" id="uuSearch" type="text" placeholder="🔍  Search posts…">
+        <select class="uu-filter" id="uuFilter">
+            <option value="all">All Tags</option>
+            <option value="rumour">Rumour</option>
+            <option value="tip">Tip</option>
+            <option value="funny">Funny</option>
+            <option value="alert">Alert</option>
+            <option value="general">General</option>
+        </select>
+        <select class="uu-sort" id="uuSort">
+            <option value="newest">Newest First</option>
+            <option value="popular">Most Liked</option>
+            <option value="comments">Most Commented</option>
+        </select>
+        <button class="uu-post-btn" onclick="openModal()"><i class="fas fa-plus"></i> Post Update</button>
+    </div>
+
+    <!-- Feed -->
+    <div class="uu-feed" id="uuFeed"></div>
+
+</div>
+
+<!-- Post Modal -->
+<div class="uu-overlay" id="uuModal" onclick="if(event.target===this)closeModal()">
+    <div class="uu-modal">
+        <div class="uu-mhead">
+            <h3><i class="fas fa-pen" style="color:#ec4899;margin-right:8px;"></i>Post an Update</h3>
+            <button class="uu-mclose" onclick="closeModal()">✕</button>
+        </div>
+        <div class="uu-mbody">
+            <div class="uu-fg">
+                <label>Tag</label>
+                <select id="pTag">
+                    <option value="general">💬 General</option>
+                    <option value="rumour">🔴 Rumour</option>
+                    <option value="tip">💡 Tip</option>
+                    <option value="funny">😂 Funny</option>
+                    <option value="alert">⚠️ Alert</option>
+                </select>
+            </div>
+            <div class="uu-fg">
+                <label>Your Update</label>
+                <textarea id="pBody" placeholder="Share what you heard, a tip, something funny, or a heads-up for fellow students…" rows="5"></textarea>
+            </div>
+            <div class="uu-fg">
+                <label>Post As (optional)</label>
+                <input id="pAuthor" placeholder="Leave blank to post as Anonymous">
+                <span class="uu-anon-note"><i class="fas fa-user-secret"></i> Leave blank to remain anonymous — no account needed.</span>
+            </div>
+        </div>
+        <div class="uu-mfoot">
+            <button class="uu-cancel" onclick="closeModal()">Cancel</button>
+            <button class="uu-submit" onclick="submitPost()">Post Update</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer" id="contact">
+    <div class="footer-top">© Copyright 2026 | <strong>NMIET Institute</strong> | All Rights Reserved</div>
+</footer>
+<script src="scroll-to-top.js"></script>
+<script>
+const UU_KEY = 'gfm_unofficial';
+const TAG_LABELS = { rumour:'🔴 Rumour', tip:'💡 Tip', funny:'😂 Funny', alert:'⚠️ Alert', general:'💬 General' };
+
+const DEFAULTS = [
+    {id:1,tag:'rumour',body:'Heard that the end-sem practicals might be pushed to first week of May instead of last week of April. Not confirmed but multiple seniors are saying the same thing.',author:'Anonymous',time:'2026-04-04 18:32',likes:28,dislikes:4,comments:[
+        {author:'SE-IT Student',text:'My mentor also hinted at the same yesterday 👀'},
+        {author:'Anonymous',text:'Please let this be true, need more time to prep!'}
+    ]},
+    {id:2,tag:'tip',body:'Pro tip: The library Wi-Fi is way faster on the 3rd floor near the periodicals section. Most people don\'t know about it. You\'re welcome 😌',author:'TechTip',time:'2026-04-03 14:10',likes:62,dislikes:1,comments:[
+        {author:'BE Student',text:'Confirmed! Been using this for a month now 🔥'}
+    ]},
+    {id:3,tag:'funny',body:'The vending machine near the gym has been dispensing two snacks for the price of one since Monday. Maintenance hasn\'t noticed. Act fast 😂',author:'Anonymous',time:'2026-04-04 11:55',likes:94,dislikes:2,comments:[
+        {author:'Sports Club',text:'Just verified 🤣🤣'},
+        {author:'Anonymous',text:'BLESS THIS MACHINE'},
+        {author:'Canteen Committee',text:'We\'ve been informed 🙂'}
+    ]},
+    {id:4,tag:'alert',body:'Heads up: The road outside the south gate is dug up for pipe work. Autos and bikes are taking a long detour. Leave home 15 mins early if you use that route.',author:'DailyCommuter',time:'2026-04-05 08:15',likes:41,dislikes:0,comments:[
+        {author:'Anonymous',text:'Thanks, saved me today!'}
+    ]},
+    {id:5,tag:'general',body:'Anyone else think the new canteen menu needs more options for people who don\'t eat non-veg? The only veg choices at lunch are literally dal and one dry sabzi. Would love to see some improvement.',author:'VegStudent',time:'2026-04-02 13:40',likes:37,dislikes:3,comments:[
+        {author:'Hostel Warden',text:'We\'ll pass this feedback to the canteen committee.'},
+        {author:'Anonymous',text:'Agreed 100%. Also the prices went up again?'}
+    ]},
+    {id:6,tag:'rumour',body:'Rumour is that IT dept is getting a brand new fully air-conditioned computer lab with 60 new workstations by next academic year. Saw some vendors measuring the space in Block C.',author:'CuriousStudent',time:'2026-04-01 16:00',likes:55,dislikes:5,comments:[]},
+];
+
+function load() { try { return JSON.parse(localStorage.getItem(UU_KEY)) || DEFAULTS; } catch(e){ return DEFAULTS; } }
+function save(d) { localStorage.setItem(UU_KEY, JSON.stringify(d)); }
+
+function initials(name) {
+    if (!name || name === 'Anonymous') return '?';
+    return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function timeAgo(ts) {
+    const diff = (Date.now() - new Date(ts).getTime()) / 1000;
+    if (diff < 60)   return 'just now';
+    if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+    if (diff < 86400)return Math.floor(diff/3600) + 'h ago';
+    return Math.floor(diff/86400) + 'd ago';
+}
+
+let likedSet   = new Set(JSON.parse(localStorage.getItem('uu_liked')  ||'[]'));
+let dislikedSet= new Set(JSON.parse(localStorage.getItem('uu_disliked')||'[]'));
+
+function saveLikes() {
+    localStorage.setItem('uu_liked',   JSON.stringify([...likedSet]));
+    localStorage.setItem('uu_disliked',JSON.stringify([...dislikedSet]));
+}
+
+function render() {
+    const q   = document.getElementById('uuSearch').value.toLowerCase();
+    const flt = document.getElementById('uuFilter').value;
+    const srt = document.getElementById('uuSort').value;
+
+    let items = load().filter(p => {
+        if (flt !== 'all' && p.tag !== flt) return false;
+        return !q || p.body.toLowerCase().includes(q) || (p.author||'').toLowerCase().includes(q);
+    });
+
+    if (srt === 'popular')  items.sort((a,b)=>b.likes-a.likes);
+    else if (srt === 'comments') items.sort((a,b)=>b.comments.length-a.comments.length);
+    else items.sort((a,b)=>new Date(b.time)-new Date(a.time));
+
+    // Stats
+    const all = load();
+    document.getElementById('cntPosts').textContent    = all.length;
+    document.getElementById('cntLikes').textContent    = all.reduce((s,p)=>s+p.likes,0);
+    document.getElementById('cntComments').textContent = all.reduce((s,p)=>s+p.comments.length,0);
+    document.getElementById('cntTrending').textContent = all.filter(p=>p.likes>=10).length;
+
+    const feed = document.getElementById('uuFeed');
+    if (!items.length) { feed.innerHTML = '<div class="uu-empty">💬 No posts yet. Be the first to share!</div>'; return; }
+
+    feed.innerHTML = items.map(p => {
+        const liked    = likedSet.has(p.id);
+        const disliked = dislikedSet.has(p.id);
+        const commentsHtml = p.comments.map(c=>`
+            <div class="uu-comment">
+                <div class="uu-comment-avatar">${initials(c.author)}</div>
+                <div class="uu-comment-body">
+                    <div class="uu-comment-author">${c.author}</div>
+                    <div class="uu-comment-text">${c.text}</div>
+                </div>
+            </div>`).join('');
+
+        return `
+        <div class="uu-post" id="post-${p.id}">
+            <div class="uu-post-top">
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <div class="uu-avatar">${initials(p.author)}</div>
+                    <div class="uu-author-block">
+                        <div class="uu-author">${p.author || 'Anonymous'}</div>
+                        <div class="uu-time">${timeAgo(p.time)} · ${p.time.split(' ')[0]}</div>
+                    </div>
+                </div>
+                <span class="uu-tag-badge ${p.tag}">${TAG_LABELS[p.tag]||p.tag}</span>
+            </div>
+            <div class="uu-body">${p.body}</div>
+            <div class="uu-actions">
+                <button class="uu-action-btn ${liked?'liked':''}" onclick="toggleLike(${p.id})">
+                    <i class="fas fa-heart"></i> ${p.likes}
+                </button>
+                <button class="uu-action-btn ${disliked?'disliked':''}" onclick="toggleDislike(${p.id})">
+                    <i class="fas fa-thumbs-down"></i> ${p.dislikes}
+                </button>
+                <button class="uu-action-btn" onclick="toggleComments(${p.id})">
+                    <i class="fas fa-comment"></i> ${p.comments.length} Comments
+                </button>
+                ${p.likes >= 10 ? '<span style="font-size:12px;font-weight:700;color:#ec4899;"><i class="fas fa-fire"></i> Trending</span>' : ''}
+            </div>
+            <div class="uu-comments" id="comments-${p.id}" style="display:none;">
+                <div id="comment-list-${p.id}">${commentsHtml || '<div style="font-size:13px;color:#9ca3af;margin-bottom:8px;">No comments yet. Start the conversation!</div>'}</div>
+                <div class="uu-comment-input-row">
+                    <input class="uu-comment-input" id="cinput-${p.id}" placeholder="Add a comment…" onkeydown="if(event.key==='Enter')postComment(${p.id})">
+                    <button class="uu-comment-submit" onclick="postComment(${p.id})">Reply</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleLike(id) {
+    const items = load();
+    const post  = items.find(p=>p.id===id);
+    if (!post) return;
+    if (likedSet.has(id)) {
+        likedSet.delete(id); post.likes--;
+    } else {
+        likedSet.add(id); post.likes++;
+        if (dislikedSet.has(id)) { dislikedSet.delete(id); post.dislikes = Math.max(0,post.dislikes-1); }
+    }
+    saveLikes(); save(items); render();
+}
+
+function toggleDislike(id) {
+    const items = load();
+    const post  = items.find(p=>p.id===id);
+    if (!post) return;
+    if (dislikedSet.has(id)) {
+        dislikedSet.delete(id); post.dislikes = Math.max(0,post.dislikes-1);
+    } else {
+        dislikedSet.add(id); post.dislikes++;
+        if (likedSet.has(id)) { likedSet.delete(id); post.likes = Math.max(0,post.likes-1); }
+    }
+    saveLikes(); save(items); render();
+}
+
+function toggleComments(id) {
+    const el = document.getElementById('comments-'+id);
+    if (!el) return;
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function postComment(id) {
+    const inp  = document.getElementById('cinput-'+id);
+    const text = inp.value.trim();
+    if (!text) return;
+    const items = load();
+    const post  = items.find(p=>p.id===id);
+    if (!post) return;
+    post.comments.push({ author:'Anonymous', text });
+    save(items);
+    inp.value = '';
+    render();
+    // Re-open comment section
+    const el = document.getElementById('comments-'+id);
+    if (el) el.style.display = 'block';
+}
+
+function openModal() { document.getElementById('uuModal').classList.add('active'); }
+function closeModal() { document.getElementById('uuModal').classList.remove('active'); }
+function submitPost() {
+    const body = document.getElementById('pBody').value.trim();
+    if (!body) { alert('Please write something before posting.'); return; }
+    const items = load();
+    items.unshift({
+        id:      Date.now(),
+        tag:     document.getElementById('pTag').value,
+        body,
+        author:  document.getElementById('pAuthor').value.trim() || 'Anonymous',
+        time:    new Date().toISOString().replace('T',' ').slice(0,16),
+        likes:   0,
+        dislikes:0,
+        comments:[]
+    });
+    save(items); closeModal();
+    document.getElementById('pBody').value   = '';
+    document.getElementById('pAuthor').value = '';
+    render();
+}
+
+document.getElementById('uuSearch').addEventListener('input', render);
+document.getElementById('uuFilter').addEventListener('change', render);
+document.getElementById('uuSort').addEventListener('change', render);
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
